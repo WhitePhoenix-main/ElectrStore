@@ -21,4 +21,10 @@
         <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="6.0.10" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Pages\Cabinet\Admin" />
+      <Folder Include="Pages\Cabinet\User" />
+      <Folder Include="Pages\Products\Pages" />
+    </ItemGroup>
+
 </Project>
