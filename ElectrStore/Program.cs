@@ -11,6 +11,8 @@ builder.Services.AddDbContext<StoreContext>(options =>
     options.UseSqlServer(connectionString));
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
+builder.Services.AddTransient<IProductRepository, ProductRepository>();
+
 builder.Services.AddIdentity<IdentityUser, IdentityRole>(
         options =>
             options.SignIn.RequireConfirmedAccount = false)
