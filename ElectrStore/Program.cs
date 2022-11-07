@@ -1,3 +1,4 @@
+using System.Drawing.Text;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using ElectrStore;
@@ -10,11 +11,23 @@ builder.Services.AddDbContext<StoreContext>(options =>
     options.UseSqlServer(connectionString));
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
-builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
+builder.Services.AddIdentity<IdentityUser, IdentityRole>(
+        options =>
+            options.SignIn.RequireConfirmedAccount = false)
+    .AddRoles<IdentityRole>()
+    .AddDefaultTokenProviders()
     .AddEntityFrameworkStores<StoreContext>();
 builder.Services.AddRazorPages();
 
+
 var app = builder.Build();
+
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    
+    SeedRoles.Initialize(services);
+}
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -39,3 +52,25 @@ app.UseAuthorization();
 app.MapRazorPages();
 
 app.Run();
+
+public static class SeedRoles
+{
+    public static void Initialize(IServiceProvider serviceProvider)
+    {
+        using (var context = new StoreContext(serviceProvider.GetRequiredService<DbContextOptions<StoreContext>>()))
+        {
+            string[] roles = new string[] { "Owner", "Administrator", "User" };
+            var newRoleList = new List<IdentityRole>();
+            foreach (string role in roles)
+            {
+                if (!context.Roles.Any(r => r.Name == role))
+                {
+                    newRoleList.Add(new IdentityRole(role));
+                }
+            }
+
+            context.Roles.AddRange(newRoleList);
+            context.SaveChanges();
+        }
+    }
+}

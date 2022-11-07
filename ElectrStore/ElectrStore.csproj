@@ -8,10 +8,6 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <None Update="app.db" CopyToOutputDirectory="PreserveNewest" ExcludeFromSingleFile="true" />
-    </ItemGroup>
-
-    <ItemGroup>
         <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="6.0.4" />
         <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="6.0.4" />
         <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="6.0.4" />
@@ -22,8 +18,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Pages\Cabinet\Admin" />
-      <Folder Include="Pages\Cabinet\User" />
+      <Folder Include="Pages\Users\User" />
       <Folder Include="Pages\Products\Pages" />
     </ItemGroup>
 

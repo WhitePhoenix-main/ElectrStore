@@ -1,0 +1,46 @@
+@page "/Products/Home"
+@model ElectrStore.Pages.Products.Pages.IndexModel
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Pages/Shared/_Layout.cshtml";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-page="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.ProductRecord[0].ProductName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ProductRecord[0].Price)
+        </th>
+        <th></th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var item in Model.ProductRecord) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.ProductName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Price)
+            </td>
+            <td>
+                <a asp-page="./ProductEdit" asp-route-id="@item.Id">Edit</a> |
+                <a asp-page="./ProductDetails" asp-route-id="@item.Id">Details</a> |
+                <a asp-page="./ProductDelete" asp-route-id="@item.Id">Delete</a>
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>
+<div>
+    <a href="/Product/Create">ghgfhd</a>
+</div>
