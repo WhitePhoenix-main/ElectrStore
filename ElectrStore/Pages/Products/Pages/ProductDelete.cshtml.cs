@@ -2,56 +2,55 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 
-namespace ElectrStore.Pages.Products.Pages
+namespace ElectrStore
 {
-    public class DeleteModel : PageModel
+    public class ProductDeleteModel : PageModel
     {
         private readonly StoreContext _context;
 
-        public DeleteModel(StoreContext context)
+        private IProductsRepository _productsRepository;
+
+        public ProductDeleteModel(StoreContext context, IProductsRepository productsRepository)
         {
             _context = context;
+            _productsRepository = productsRepository;
         }
 
         [BindProperty]
-      public ProductRecord ProductRecord { get; set; } = default!;
+        public ProductRecord ProductRecord { get; set; }
 
-        public async Task<IActionResult> OnGetAsync(string id)
+        public async Task<IActionResult> OnGetAsync(string? id)
         {
-            if (id == null || _context.ProductRecords == null)
+            if (id == null)
             {
                 return NotFound();
             }
 
-            var productRecord = await _context.ProductRecords.FirstOrDefaultAsync(m => m.Id == id);
+            ProductRecord = await _context.ProductRecords.FirstOrDefaultAsync(m => m.Id == id);
 
-            if (productRecord == null)
+            if (ProductRecord == null)
             {
                 return NotFound();
-            }
-            else 
-            {
-                ProductRecord = productRecord;
             }
             return Page();
         }
 
-        public async Task<IActionResult> OnPostAsync(string id)
+        public async Task<IActionResult> OnPostAsync(string? id)
         {
-            if (id == null || _context.ProductRecords == null)
+            if (id == null)
             {
                 return NotFound();
             }
-            var productRecord = await _context.ProductRecords.FindAsync(id);
 
-            if (productRecord != null)
+            ProductRecord = await _context.ProductRecords.FindAsync(id);
+
+            if (ProductRecord != null)
             {
-                ProductRecord = productRecord;
                 _context.ProductRecords.Remove(ProductRecord);
+                _productsRepository.DelFolderWithFiles(_productsRepository.GetFolder(ProductRecord));
                 await _context.SaveChangesAsync();
             }
-
-            return RedirectToPage("./Index");
+            return RedirectToPage("/Products/Pages/ProductIndex");
         }
     }
 }

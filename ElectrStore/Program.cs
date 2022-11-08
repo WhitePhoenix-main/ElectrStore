@@ -11,7 +11,8 @@ builder.Services.AddDbContext<StoreContext>(options =>
     options.UseSqlServer(connectionString));
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
-builder.Services.AddTransient<IProductRepository, ProductRepository>();
+builder.Services.AddTransient<INormalizer, Normalizer>();
+builder.Services.AddTransient<IProductsRepository, ProductsRepository>();
 
 builder.Services.AddIdentity<IdentityUser, IdentityRole>(
         options =>

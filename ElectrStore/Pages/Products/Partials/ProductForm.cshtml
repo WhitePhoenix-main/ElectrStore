@@ -1,0 +1,71 @@
+﻿@using Microsoft.EntityFrameworkCore
+@model IHasProduct
+@inject StoreContext _context
+
+@{
+    var productTypes = await _context.Set<ProductRecord>()
+        .AsNoTracking()
+        .Select(x => x.CategoryId)
+        .Distinct()
+        .OrderBy(x => x)
+        .Select(x => new SelectListItem(x, x))
+        .ToListAsync();
+}
+<script>
+    function toggleFields() {
+        $('#selector').toggle();
+        $('#selectorNew').toggle();
+    }
+</script>
+<form method="post">
+    <input type="hidden" asp-for="ProductRecord.Id"/>
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <div class="form-group" id="selector">
+        <label asp-for="ProductRecord.CategoryId" class="control-label"></label>
+        <select asp-for="ProductRecord.CategoryId" asp-items="productTypes">
+        </select>
+        <span asp-validation-for="ProductRecord.CategoryId" class="text-danger"></span>
+    </div>
+    <div>
+        <span onclick="toggleFields()">+/-</span>
+    </div>
+
+    <div class="form-group" id="selectorNew" style="display: none">
+        <label asp-for="ProductRecord.ProductTypeNew" class="control-label">Ввод нового типа</label>
+        <input asp-for="ProductRecord.ProductTypeNew" class="form-control"/>
+        <span asp-validation-for="ProductRecord.ProductTypeNew" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="ProductRecord.ProductName" class="control-label"></label>
+        <input asp-for="ProductRecord.ProductName" class="form-control"/>
+        <span asp-validation-for="ProductRecord.ProductName" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="ProductRecord.Price" class="control-label"></label>
+        <input asp-for="ProductRecord.Price" class="form-control"/>
+        <span asp-validation-for="ProductRecord.Price" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="ProductRecord.ProductSearch" class="control-label"></label>
+        <input asp-for="ProductRecord.ProductSearch" class="form-control"/>
+        <span asp-validation-for="ProductRecord.ProductSearch" class="text-danger"></span>
+        </div>
+    @if (!Model.IsNewRec)
+    {
+        <dl>
+            <dt>
+
+            </dt>
+            <dd>
+                <input type="file" name="pic">
+            </dd>
+            <dd>
+                <input type="checkbox" asp-for="ProductRecord.OnPreview"/>
+            </dd>
+        </dl>
+    }
+    <div class="form-group">
+        <button type="submit" class="btn btn-primary">Сохранить</button>
+    </div>
+
+</form>

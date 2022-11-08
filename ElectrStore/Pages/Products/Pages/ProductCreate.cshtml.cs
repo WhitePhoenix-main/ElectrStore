@@ -1,36 +1,43 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace ElectrStore.Pages.Products.Pages
-{
-    public class CreateModel : PageModel
+namespace ElectrStore
+{  
+    [Authorize(Roles = "Owner")]
+    public class ProductCreateModel : PageModel, IHasProduct
     {
-        private readonly StoreContext _context;
+        private StoreContext _context { get; }
 
-        public CreateModel(StoreContext context)
+        public ProductCreateModel(StoreContext context)
         {
             _context = context;
         }
-        [BindProperty]
-        public ProductRecord ProductRecord { get; set; } = default!;
-        
+
         public IActionResult OnGet()
         {
             ProductRecord = new ProductRecord { Id = Guid.NewGuid().ToString() };
             return Page();
         }
 
+        [BindProperty]
+        public ProductRecord ProductRecord { get; set; }
+
+        public bool IsNewRec { get; set; } = true;
         public async Task<IActionResult> OnPostAsync()
         {
-          if (!ModelState.IsValid || _context.ProductRecords == null || ProductRecord == null)
-          {
-              return Page();
-          }
+            if (!ModelState.IsValid)
+            {
+                return Page();
+            }
 
-          _context.ProductRecords.Add(ProductRecord);
-          await _context.SaveChangesAsync();
-
-          return RedirectToPage("./ProductIndex");
+            if (!String.IsNullOrWhiteSpace(ProductRecord.ProductTypeNew))
+            {
+                ProductRecord.CategoryId = ProductRecord.ProductTypeNew;
+            }
+            _context.ProductRecords.Add(ProductRecord);
+            await _context.SaveChangesAsync();
+            return RedirectToPage("/Products/Pages/ProductIndex");
         }
     }
 }

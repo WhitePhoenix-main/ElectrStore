@@ -1,35 +1,15 @@
-﻿@*@page
-@model IndexModel
-@inject UserManager<IdentityUser> _UserManager
-@inject RoleManager<IdentityRole> _RoleManager
-@{
-    ViewData["Title"] = "Home page";
-}
-
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
-<div>
-    <a href="/Products/Home"> gfdgfhfghd fg</a>
-    
-    @#1#{
-        var userName = User.Identity.Name;
-        var user = await _UserManager.FindByNameAsync(userName);
-        await _UserManager.AddToRoleAsync(user, "Owner");
-        <p>gfgfg</p>
-    }#1#
-</div>*@
+﻿
 @page
 @using Microsoft.EntityFrameworkCore
 @model IndexModel
 @inject StoreContext _context
-@inject IProductRepository _productsRepository
+@inject IProductsRepository _productsRepository
 
 <link rel="stylesheet" href="css/mainPage.css" asp-append-version="true">
 <link rel="stylesheet" href="css/ProductInd.css" asp-append-version="true"/>
 @{
-    ViewData["Title"] = "EnixShop";
+    <title>Untitled Page</title>
+    ViewData["Title"] = "Home page";
 }
 @*@{
 TODO:Убрать костыль для выдачи роли.
@@ -41,12 +21,12 @@ TODO:Убрать костыль для выдачи роли.
 @{
     var search = (string?)ViewData["search"];
     var productType = (string?)ViewData["productType"];
-    /*var productTypes = _context.ProductRecords.AsNoTracking()
+    var productTypes = _context.ProductRecords.AsNoTracking()
         .Select(x => x.CategoryId)
         .OrderBy(x => x)
         .Distinct()
         .Select(x => new SelectListItem(x, x, x == productType))
-        .ToList();*/
+        .ToList();
 }
 <div class="main-page">
     <div class="row">
@@ -57,7 +37,7 @@ TODO:Убрать костыль для выдачи роли.
                     <i class="bi bi-list"></i>
                     Категории
                 </h4>
-                @*<ul class="categories-list mb-0">
+                <ul class="categories-list mb-0">
                     @foreach (var element in productTypes)
                     {
                         <li>
@@ -67,7 +47,7 @@ TODO:Убрать костыль для выдачи роли.
                             </a>
                         </li>
                     }
-                </ul>*@
+                </ul>
             </div>
         </div>
         <div class="col-md-9">
@@ -107,17 +87,17 @@ TODO:Убрать костыль для выдачи роли.
                 <div class="title-block mt-2">
                     <span>Популярные товары</span>
                 </div>
-                @*@{
+                @{
                     var product = (string?)ViewData["IsHotDeal"];
-                    var products = _context.Product.AsNoTracking()
+                    var products = _context.ProductRecords.AsNoTracking()
                         .Where(product => product.IsHotDeal == true)
                         .OrderBy(product => product.Id)
                         .Distinct()
                         .ToList();
-                }*@
+                }
                 <div class="row row-cols-2 row-cols-md-3 row-cols-lg-4 justify-content-around">
                     @{
-                        @*foreach (var item in products)
+                        foreach (var item in products)
                         {
                             var priceOut = ((decimal)item.Price / 100.0m).ToString("0.00");
                             <div>
@@ -178,7 +158,7 @@ TODO:Убрать костыль для выдачи роли.
                                     </div>
                                 </div>
                                 </div>
-                        }*@
+                        }
                     }
                 </div>
             </div>

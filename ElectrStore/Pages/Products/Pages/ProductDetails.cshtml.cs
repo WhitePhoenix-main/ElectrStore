@@ -1,35 +1,35 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 
-namespace ElectrStore.Pages.Products.Pages
+namespace ElectrStore
 {
-    public class DetailsModel : PageModel
+    [Authorize]
+    public class ProductDetailsModel : PageModel
     {
         private readonly StoreContext _context;
 
-        public DetailsModel(StoreContext context)
+        public ProductDetailsModel(StoreContext context)
         {
             _context = context;
         }
 
-      public ProductRecord ProductRecord { get; set; } = default!; 
+        public ProductRecord ProductRecord { get; set; }
 
-        public async Task<IActionResult> OnGetAsync(string id)
+        public async Task<IActionResult> OnGetAsync(string? id)
         {
-            if (id == null || _context.ProductRecords == null)
+            // TODO: Проверка на пустую строку
+            if (id == null)
             {
                 return NotFound();
             }
 
-            var productrecord = await _context.ProductRecords.FirstOrDefaultAsync(m => m.Id == id);
-            if (productrecord == null)
+            ProductRecord = await _context.ProductRecords.FirstOrDefaultAsync(m => m.Id == id);
+
+            if (ProductRecord == null)
             {
                 return NotFound();
-            }
-            else 
-            {
-                ProductRecord = productrecord;
             }
             return Page();
         }

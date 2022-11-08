@@ -1,31 +1,42 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
-using ElectrStore;
 
-namespace ElectrStore.Pages.Products.Pages
+namespace ElectrStore
 {
-    public class IndexModel : PageModel
+    public class ProductIndexModel : PageModel
     {
-        private readonly ElectrStore.StoreContext _context;
+        public StoreContext Context { get; }
 
-        public IndexModel(StoreContext context)
+        public ProductIndexModel(StoreContext context)
         {
-            _context = context;
+            Context = context;
         }
+        
+        public IList<ProductRecord> Product { get;set; }
 
-        public IList<ProductRecord> ProductRecord { get;set; } = default!;
-
-        public async Task OnGetAsync()
+        public async Task OnGetAsync(string? search, string? productType)
         {
-            if (_context.ProductRecords != null)
-            {
-                ProductRecord = await _context.ProductRecords.ToListAsync();
-            }
+            ViewData["search"] = search;
+            ViewData["productType"] = productType;
+            //TODO: Пересмотреть логику
+            var query = Context.ProductRecords.AsNoTracking();
+            if (!string.IsNullOrWhiteSpace(search) && string.IsNullOrWhiteSpace(productType))
+                query = query
+                    .Where(product => product.CategoryId == search 
+                    || product.ProductName == search);
+            else if (!string.IsNullOrWhiteSpace(productType) && !string.IsNullOrWhiteSpace(search))
+                query = query
+                    .Where(product => product.CategoryId == productType
+                                      || product.ProductName == search);
+            else if (!string.IsNullOrWhiteSpace(productType) )
+                query = query
+                    .Where(product => product.CategoryId == productType);
+            
+            Product = await query
+                .OrderBy(product => product.CategoryId)
+                .ThenBy(product => product.ProductName)
+                .ToListAsync();
         }
+        
     }
 }
