@@ -1,5 +1,6 @@
 ﻿@model ProductRecord
 @inject IProductsRepository _productsRepository
+@inject UserManager<IdentityUser> _userManager;
 @{
     var priceOut = ((decimal)Model.Price / 100.0m).ToString("0.00");
     var product = Model;
@@ -12,16 +13,16 @@
                     <img class="img-fluid align-items-lg-center" src="@_productsRepository.GetPic(product)" alt="Card image cap"/>
                 </div>
             </div>
-            <div class="btns">
-                <div class="wishlist container-fluid">
-                    <a asp-page="/Products/Pages/ProductDelete" asp-route-id="@Model.Id">
-                        <i class="bi bi-heart"></i>
-                    </a>
-                </div>
-
-            </div>
-            @if (User.Identity.IsAuthenticated)
+            @if (User.IsInRole("Owner"))
             {
+                <div class="btns">
+                    <div class="wishlist container-fluid">
+                        <a asp-page="/Products/Pages/ProductDelete" asp-route-id="@Model.Id">
+                            <i class="bi bi-heart"></i>
+                        </a>
+                    </div>
+
+                </div>
                 <div class="settings">
                     <a asp-page="/Products/Pages/ProductPictureEdit" asp-route-id="@Model.Id">
                         <i class="bi bi-image"></i>
@@ -52,5 +53,24 @@
                 }
             </div>
         </div>
-    </div>
+        @{
+            if (User.Identity.Name is not null)
+            {
+
+                var user = await _userManager.FindByNameAsync(User.Identity.Name);
+                var userId = user.Id;
+
+
+                <form method="post"
+                      asp-page="/Basket/Create"
+                      asp-page-handler="Create">
+                    <input type="hidden" name="productId" asp-for="@Model.Id"/>
+                    <input type="hidden" name="userId" asp-for="@userId"/>
+                    <button type="submit" class="btn btn-sm btn-danger">
+                        В корзину
+                    </button>
+                </form>
+            }
+        }
+            </div>
 </div>

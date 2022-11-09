@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.AspNetCore.Identity;
 
 namespace ElectrStore;
 [Table(("Product"))]
@@ -26,5 +27,5 @@ public class ProductRecord
     [NotMapped] public string? ProductTypeNew { get; set; }
             
     [NotMapped] public string? ProductSearch { get; set; }
-    
+
 }

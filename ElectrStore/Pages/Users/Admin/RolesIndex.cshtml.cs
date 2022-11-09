@@ -4,7 +4,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace ElectrStore;
-/*[Authorize(Roles="admin")]*/
+
+[Authorize(Roles = "Owner")]
 public class RolesIndex : PageModel
 {
     private RoleManager<IdentityRole> _roleManager { get; }

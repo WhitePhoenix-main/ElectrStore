@@ -1,6 +1,4 @@
 @page "/Product/Index"
-@System.Globalization.CultureInfo.CurrentUICulture
-
 @using Microsoft.EntityFrameworkCore
 @model ElectrStore.ProductIndexModel
 @inject IProductsRepository _productsRepository
@@ -10,15 +8,13 @@
 <link rel="stylesheet" href="/css/ProductInd.css" asp-append-version="true">
 
 @inject UserManager<IdentityUser> _manager
-
-<h1>Index</h1>
 @if (User.Identity?.IsAuthenticated ?? false)
 {
     <p>
         <a asp-page="/Products/Pages/ProductCreate">Create New</a>
     </p>
 }
-<div class="row">
+<div class="row pt-md-3">
     <div class="col-md-3">
         @{
             var search = (string?)ViewData["search"];
@@ -51,6 +47,5 @@
                         *@
             }
         </div>
-        <a href="/Product/Edit">gfg</a>
     </div>
 </div>

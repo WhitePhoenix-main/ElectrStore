@@ -1,26 +1,31 @@
 ﻿@page "/Admin/RoleEdit"
 @model ElectrStore.RoleEdit
 @inject UserManager<IdentityUser> _userManager;
+
 @{
     var labelText = Model.IsNewRec ? "Новая роль" : "Редактировать";
     var btnText = Model.IsNewRec ? "Добавить" : "Изменить";
     var AllUsers = _userManager.Users.ToList();
 }
 
-<form method="post">
+<form method="post"
+      asp-page-handler="Create">
     <div class="form-group">
         <label asp-for="RoleName">@labelText</label>
-        <input name="name" class="form-control"/>
+        <input asp-for="RoleName" class="form-control"/>
     </div>
     <button type="submit" class="btn btn-primary">@btnText</button>
 </form>
+@{
+}
 @foreach (var user in AllUsers)
 {
     <form method="post"
-          asp-page-handler="AddToRole"
-          asp-route-id="@user.Id">
+          asp-page-handler="AddToRole">
+        <input type="hidden" name="userId" asp-for="@user.Id"/>
+        <input type="hidden" name="roleName" asp-for="Role.Name"/>
         <button type="submit" class="btn btn-sm btn-danger">
-            Удалить
+            @user.Email
         </button>
     </form>
 

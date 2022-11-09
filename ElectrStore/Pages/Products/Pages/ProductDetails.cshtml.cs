@@ -5,7 +5,6 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ElectrStore
 {
-    [Authorize]
     public class ProductDetailsModel : PageModel
     {
         private readonly StoreContext _context;

@@ -1,9 +1,11 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 
 namespace ElectrStore
 {
+    [Authorize(Roles = "Owner")]
     public class ProductDeleteModel : PageModel
     {
         private readonly StoreContext _context;

@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ElectrStore
 {
-    [Authorize]
+    [Authorize(Roles = "Owner")]
     public class ProductEditModel : PageModel, IHasProduct
     {
         public ProductEditModel(StoreContext context, INormalizer normalizer,

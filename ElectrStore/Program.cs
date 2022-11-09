@@ -68,7 +68,7 @@ public static class SeedRoles
             {
                 if (!context.Roles.Any(r => r.Name == role))
                 {
-                    newRoleList.Add(new IdentityRole(role));
+                    newRoleList.Add(new IdentityRole(role) { NormalizedName = role.ToUpper().Trim()});
                 }
             }
 
