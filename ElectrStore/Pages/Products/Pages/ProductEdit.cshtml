@@ -44,8 +44,8 @@
                     </div>
                     <div class="form-group">
                         <label>Цена</label>
-                        <input asp-for="ProductPrice" class="form-control"/>
-                        <span asp-validation-for="ProductPrice" class="text-danger"></span>
+                        <input type="number" min="0" asp-for="PriceInput" class="form-control" required=""/>
+                        <span asp-validation-for="PriceInput" class="text-danger"></span>
                     </div>
                     <div class="form-group">
                         <label>Горячее предложение</label>
@@ -57,7 +57,7 @@
                     </div>
                     <div class="form-group">
                         <label>Скидка в процентах</label>
-                        <input asp-for="ProductDiscountPercent" class="form-control"/>
+                        <input min="0" asp-for="ProductDiscountPercent" class="form-control"/>
                         <span asp-validation-for="ProductDiscountPercent" class="text-danger"></span>
                     </div>
                     <div class="form-group">
@@ -78,7 +78,7 @@
                     <input asp-for="ProductId" type="hidden"/>
                     <div class="form-group">
                         <label>Количество товара</label>
-                        <input asp-for="ProductQuantity" class="form-control"/>
+                        <input min="0" asp-for="ProductQuantity" class="form-control"/>
                         <span asp-validation-for="ProductQuantity" class="text-danger"></span>
                     </div>
                     <div class="form-group">
@@ -114,9 +114,9 @@
 </div>
 
 <div>
-    <a asp-page="/Products/ProductIndex">Back to List</a>
+    <a asp-page="/Products/Pages/ProductIndex">Back to List</a>
 </div>
 
 @section Scripts {
     @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
-}}
+}

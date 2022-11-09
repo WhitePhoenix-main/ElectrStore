@@ -35,6 +35,7 @@ namespace ElectrStore
         [BindProperty] public int ProductDiscountPercent { get; set; }
         
         [BindProperty] public bool ProductIsDiscount { get; set; }
+        [BindProperty] public string? PriceInput { get; set; }
 
         public async Task<IActionResult> OnGetAsync(string id)
         {
@@ -51,7 +52,7 @@ namespace ElectrStore
             //TODO: Тут используется CategoryId, очевидно, что должна быть потом ещё одна таблица
             ProductCategory = ProductRecord.CategoryId;
             Name = ProductRecord.ProductName;
-            ProductPrice = ProductRecord.Price;
+            PriceInput = ProductRecord.PriceInput;
             ProductQuantity = ProductRecord.Quantity;
             ProductHotDeal = ProductRecord.IsHotDeal;
             ProductDiscountPercent = ProductRecord.DiscountPercent;
@@ -93,13 +94,12 @@ namespace ElectrStore
 
             ProductRecord.CategoryId = ProductCategory;
             ProductRecord.ProductName = Name;
-            ProductRecord.Price = ProductPrice;
+            ProductRecord.Price = _normalizer.GetNormStrRu(PriceInput);
             ProductRecord.IsHotDeal = ProductHotDeal;
             ProductRecord.DiscountPercent = ProductDiscountPercent ;
             ProductRecord.IsDiscount = ProductIsDiscount;
             _context.Update(ProductRecord);
             await _context.SaveChangesAsync();
-            //TODO: Спросить как перенаправлять на страницу с поиском, а не где все товары
             return RedirectToPage("/Products/Pages/ProductIndex");
         }
 //TODO: Реализовать удаление карточки товара

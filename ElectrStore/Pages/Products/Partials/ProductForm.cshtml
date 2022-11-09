@@ -36,20 +36,34 @@
         <span asp-validation-for="ProductRecord.ProductTypeNew" class="text-danger"></span>
     </div>
     <div class="form-group">
-        <label asp-for="ProductRecord.ProductName" class="control-label"></label>
+        <label asp-for="ProductRecord.ProductName" class="control-label">Название продукта</label>
         <input asp-for="ProductRecord.ProductName" class="form-control"/>
         <span asp-validation-for="ProductRecord.ProductName" class="text-danger"></span>
     </div>
     <div class="form-group">
-        <label asp-for="ProductRecord.Price" class="control-label"></label>
-        <input asp-for="ProductRecord.Price" class="form-control"/>
-        <span asp-validation-for="ProductRecord.Price" class="text-danger"></span>
+        <label asp-for="ProductRecord.PriceInput" class="control-label">Цена</label>
+        <input type="number" min="0" asp-for="ProductRecord.PriceInput" class="form-control" required=""/>
+        <span asp-validation-for="ProductRecord.PriceInput" class="text-danger"></span>
     </div>
     <div class="form-group">
-        <label asp-for="ProductRecord.ProductSearch" class="control-label"></label>
-        <input asp-for="ProductRecord.ProductSearch" class="form-control"/>
-        <span asp-validation-for="ProductRecord.ProductSearch" class="text-danger"></span>
+        <label>Горячее предложение</label>
+        <input type="checkbox" asp-for="ProductRecord.IsHotDeal"/>
+    </div>
+    <div class="form-group">
+        <label>Есть скидка?</label>
+        <input type="checkbox" asp-for="ProductRecord.IsDiscount"/>
+    </div>
+    <div class="form-group">
+        <label>Скидка в процентах</label>
+        <input asp-for="ProductRecord.DiscountPercent" class="form-control"/>
+        <span asp-validation-for="ProductRecord.DiscountPercent" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+            <label>Количество товара</label>
+            <input min="0" asp-for="ProductRecord.Quantity" class="form-control" required=""/>
+            <span asp-validation-for="ProductRecord.Quantity" class="text-danger"></span>
         </div>
+
     @if (!Model.IsNewRec)
     {
         <dl>

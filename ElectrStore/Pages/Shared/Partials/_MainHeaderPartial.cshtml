@@ -31,6 +31,7 @@
                                 <span>Избранное</span>
                             </a>
                         </div>
+
                         <div class="cart-btn">
                             <a asp-page="/Basket/Index">
                                 <div class="header-icons">
@@ -76,14 +77,17 @@
                                 <span>Избранное</span>
                             </a>
                         </div>
-                        <div class="cart-btn">
-                            <a asp-area="Identity" asp-page="#">
-                                <div class="header-icons">
-                                    <i class="bi bi-cart3"></i>
-                                </div>
-                                <span>Корзина</span>
-                            </a>
-                        </div>
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            <div class="cart-btn">
+                                <a asp-area="Identity" asp-page="#">
+                                    <div class="header-icons">
+                                        <i class="bi bi-cart3"></i>
+                                    </div>
+                                    <span>Корзина</span>
+                                </a>
+                            </div>
+                        }
                     </div>
                     <div class="text-end align-self-center">
                         <a class="btn login-btn" asp-area="Identity" asp-page="/Account/Login">
