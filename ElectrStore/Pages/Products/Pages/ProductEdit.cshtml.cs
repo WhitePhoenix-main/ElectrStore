@@ -77,7 +77,7 @@ namespace ElectrStore
             _context.Update(ProductRecord);
             await _context.SaveChangesAsync();
             //TODO: Спросить как перенаправлять на страницу с поиском, а не где все товары
-            return RedirectToPage("/Products/ProductIndex");
+            return RedirectToPage("/Products/Pages/ProductIndex");
         }
         public async Task<IActionResult> OnPostAsync()
         {

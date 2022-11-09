@@ -8,6 +8,7 @@ namespace ElectrStore
     public class ProductCreateModel : PageModel, IHasProduct
     {
         private StoreContext _context { get; }
+        private INormalizer _normalizer { get; init; }
 
         public ProductCreateModel(StoreContext context)
         {
@@ -31,10 +32,14 @@ namespace ElectrStore
                 return Page();
             }
 
+            
             if (!String.IsNullOrWhiteSpace(ProductRecord.ProductTypeNew))
             {
                 ProductRecord.CategoryId = ProductRecord.ProductTypeNew;
             }
+
+            /*ProductRecord.Price = _normalizer.GetNormStrRu(ProductRecord.PriceInput);*/
+            ProductRecord.Price = ProductRecord.Price * 100;
             _context.ProductRecords.Add(ProductRecord);
             await _context.SaveChangesAsync();
             return RedirectToPage("/Products/Pages/ProductIndex");
