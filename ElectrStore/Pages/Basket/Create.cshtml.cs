@@ -34,7 +34,9 @@ namespace ElectrStore.Pages.Buscket
         // To protect from overposting attacks, see https://aka.ms/RazorPagesCRUD
         public async Task<IActionResult> OnPostCreateAsync(string productId, string userId)
         {
-            var orders = await _context.OrderRecords.Where(u => u.UserId == userId && OrderRecord.Status == 0)
+            var product = await _context.ProductRecords.Where(p => p.Id == productId)
+                .FirstOrDefaultAsync();
+            var orders = await _context.OrderRecords.Where(u => u.UserId == userId && u.Status == 0)
                 .FirstOrDefaultAsync();
             if (orders is null)
             {
@@ -50,7 +52,8 @@ namespace ElectrStore.Pages.Buscket
                 OrderItemsRecord = new OrderItemsRecord { Id = Guid.NewGuid().ToString() };
                 OrderItemsRecord.OrderId = orders.Id;
             }
-            OrderItemsRecord.ProductId = productId;
+            OrderItemsRecord.ProductId = product.Id;
+            OrderItemsRecord.ProductName = product.ProductName;
             _context.OrderItemsRecords.Add(OrderItemsRecord);
             await _context.SaveChangesAsync();
             return RedirectToPage("./Index");

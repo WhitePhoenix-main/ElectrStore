@@ -1,42 +1,73 @@
 @page
+@using Microsoft.EntityFrameworkCore
+@using Microsoft.AspNetCore.Mvc.TagHelpers
 @model ElectrStore.Pages.Buscket.IndexModel
+@inject UserManager<IdentityUser> _userManager
+@inject StoreContext _context
+
 
 @{
     ViewData["Title"] = "Index";
 }
-
-<h1>Index</h1>
-
-<p>
-    <a asp-page="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.OrderItemsRecord[0].ProductId)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.OrderItemsRecord[0].OrderId)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model.OrderItemsRecord) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.ProductId)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.OrderId)
-            </td>
-            <td>
-                <a asp-page="./Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-page="./Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-page="./Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
+@{
+    var user = await _userManager.FindByNameAsync(User.Identity.Name);
+    var userId = user.Id;
+    var order = await _context.OrderRecords.Where(u => u.UserId == userId && u.Status == 0)
+        .FirstOrDefaultAsync();
 }
-    </tbody>
-</table>
+    <h1>Корзина</h1>
+@{
+    if (order is not null)
+    {
+        <table class="table">
+            <thead>
+            <tr>
+                <th>
+                    Название
+                </th>
+                <th>
+                    mghmh
+                </th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            @{
+                List<OrderItemsRecord> items = null;
+
+                items = await _context.OrderItemsRecords.Where(u => u.OrderId == order.Id)
+                    .ToListAsync();
+
+                foreach (var item in items)
+                {
+                    <tr>
+                        <td>
+                            <p>@item.ProductName</p>
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.OrderId)
+                        </td>
+                        <td>
+                            <a asp-page="./Edit" asp-route-id="@item.Id">Edit</a> |
+                            <a asp-page="./Details" asp-route-id="@item.Id">Details</a> |
+                            <a asp-page="./Delete" asp-route-id="@item.Id">Удалить</a>
+                        </td>
+                    </tr>
+                }
+
+            }
+            </tbody>
+        </table>
+        <form method="post"
+              asp-page-handler="SubmitOrder">
+            <input type="hidden" name="userId" asp-for="@userId"/>
+            <button>
+                Заказать
+            </button>
+        </form>
+    }
+    else
+    {
+        <h2>Корзина пуста!</h2>
+    }
+}

@@ -11,14 +11,17 @@ namespace ElectrStore.Pages.Buscket
 {
     public class IndexModel : PageModel
     {
-        private readonly ElectrStore.StoreContext _context;
+        private readonly StoreContext _context;
 
-        public IndexModel(ElectrStore.StoreContext context)
+        public IndexModel(StoreContext context)
         {
             _context = context;
         }
 
         public IList<OrderItemsRecord> OrderItemsRecord { get;set; } = default!;
+        
+        [BindProperty] 
+        public OrderRecord OrderRecord { get; set; } = default!;
 
         public async Task OnGetAsync()
         {
@@ -26,6 +29,16 @@ namespace ElectrStore.Pages.Buscket
             {
                 OrderItemsRecord = await _context.OrderItemsRecords.ToListAsync();
             }
+        }
+
+        public async Task<IActionResult> OnPostSubmitOrderAsync(string userId)
+        {
+            var order = await _context.OrderRecords.Where(u => u.UserId == userId && u.Status == 0)
+                .FirstOrDefaultAsync();
+            order.Status = 1;
+            _context.OrderRecords.Update(order);
+            await _context.SaveChangesAsync();
+            return RedirectToPage("/Index");
         }
     }
 }
