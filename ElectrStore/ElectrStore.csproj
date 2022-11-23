@@ -21,7 +21,6 @@
     <ItemGroup>
       <Folder Include="Pages\Basket\Data" />
       <Folder Include="Pages\Users\User" />
-      <Folder Include="wwwroot\lib\bootstrap" />
     </ItemGroup>
 
     <ItemGroup>

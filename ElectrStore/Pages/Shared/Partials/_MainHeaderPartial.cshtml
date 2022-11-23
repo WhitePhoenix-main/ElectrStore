@@ -6,12 +6,12 @@
                     <p4>ElectrStore</p4>
                 </a>
             </div>
-            <div class="col-md-5">
+            <div class="col-md-6">
                 <div class="header-search">
                     <partial name="Partials/_FindFormPartial"/>
                 </div>
             </div>
-            <div class="header-btn col-md-5 d-flex">
+            <div class="header-btn col-md-4 d-flex">
                 @if (User.Identity?.IsAuthenticated ?? false)
                 {
                     <div class="container justify-content-between p-0">
@@ -38,14 +38,6 @@
                                     <i class="bi bi-cart3"></i>
                                 </div>
                                 <span>Корзина</span>
-                            </a>
-                        </div>
-                        <div class="notif-btn text-white text-lg">
-                            <a asp-area="Identity" asp-page="#">
-                                <div>
-                                    <i class="bi bi-bell"></i>
-                                </div>
-                                <span>Уведомления</span>
                             </a>
                         </div>
                     </div>

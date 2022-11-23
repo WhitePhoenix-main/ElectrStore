@@ -1,22 +1,25 @@
 ﻿<!DOCTYPE html>
 <html lang="ru">
 
-<link rel="stylesheet" href="/lib/bootstrap/css/bootstrap.css"/>
+<link rel="stylesheet" href="/lib/bootstrap-5.2.2/css/bootstrap.css"/>
 <link rel="stylesheet" href="/lib/bootstrap-icons/font/bootstrap-icons.css"/>
 <link rel="stylesheet" href="/css/header.css" asp-append-version="true"/>
 
 <partial name="Partials/_UpInfoPanelPartial"/>
 <partial name="Partials/_MainHeaderPartial"/>
+<partial name="Partials/_Tree"/>
 <partial name="Partials/_LoginPartial"/>
+
 @if (User.IsInRole("Owner"))
 {
-    <partial name="Partials/_RolesPartial"/>
+    @*<partial name="Partials/_RolesPartial"/>*@
 }
 <div class="container">
     <main role="main" class="pb-3">
-        @RenderBody()
+       @RenderBody() 
     </main>
 </div>
+
 <script src="~/lib/jquery/dist/jquery.min.js"></script>
 <script src="~/lib/jquery-validation/dist/jquery.validate.globalize.min.js"></script>
 <script src="~/lib/bootstrap/js/bootstrap.bundle.min.js"></script>
