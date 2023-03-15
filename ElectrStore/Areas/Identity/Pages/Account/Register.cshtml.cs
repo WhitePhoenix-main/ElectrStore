@@ -123,7 +123,15 @@ namespace ElectrStore.Areas.Identity.Pages.Account
                         pageHandler: null,
                         values: new { area = "Identity", userId = userId, code = code, returnUrl = returnUrl },
                         protocol: Request.Scheme);
-                    await _userManager.AddToRoleAsync(user, "User");
+                    if (_userManager.Users.Count() == 1)
+                    {
+                        await _userManager.AddToRoleAsync(user, "Owner");
+                    }
+                    else
+                    {
+                        await _userManager.AddToRoleAsync(user, "User");
+                    }
+
 
                     /*
                     await _emailSender.SendEmailAsync(Input.Email, "Confirm your email",
@@ -154,6 +162,7 @@ namespace ElectrStore.Areas.Identity.Pages.Account
         {
             try
             {
+                
                 return Activator.CreateInstance<IdentityUser>();
             }
             catch
@@ -162,6 +171,7 @@ namespace ElectrStore.Areas.Identity.Pages.Account
                     $"Ensure that '{nameof(IdentityUser)}' is not an abstract class and has a parameterless constructor, or alternatively " +
                     $"override the register page in /Areas/Identity/Pages/Account/Register.cshtml");
             }
+            
         }
 
         private IUserEmailStore<IdentityUser> GetEmailStore()

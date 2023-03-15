@@ -23,38 +23,30 @@ namespace ElectrStore.Pages.Buscket
         {
             return Page();
         }
-
-        [BindProperty]
-        public OrderItemsRecord OrderItemsRecord { get; set; } = default!;
-
-        [BindProperty] 
-        public OrderRecord OrderRecord { get; set; } = default!;
-        
-
         // To protect from overposting attacks, see https://aka.ms/RazorPagesCRUD
         public async Task<IActionResult> OnPostCreateAsync(string productId, string userId)
         {
             var product = await _context.ProductRecords.Where(p => p.Id == productId)
                 .FirstOrDefaultAsync();
-            var orders = await _context.OrderRecords.Where(u => u.UserId == userId && u.Status == 0)
+            var order = await _context.OrderRecords.Where(u => u.UserId == userId && u.Status == 0)
                 .FirstOrDefaultAsync();
-            if (orders is null)
+            var orderItemsRecord = new OrderItemsRecord { Id = Guid.NewGuid().ToString() };
+            if (order is null)
             {
-                OrderRecord = new OrderRecord { Id = Guid.NewGuid().ToString() };
-                OrderRecord.Status = 0;
-                OrderRecord.UserId = userId;
-                _context.OrderRecords.Add(OrderRecord);
+                order = new OrderRecord { Id = Guid.NewGuid().ToString() };
+                order.Status = 0;
+                order.UserId = userId;
+                _context.OrderRecords.Add(order);
                 await _context.SaveChangesAsync();
-                OrderItemsRecord.OrderId = OrderRecord.Id;
+                orderItemsRecord.OrderId = order.Id;
             }
             else
             {
-                OrderItemsRecord = new OrderItemsRecord { Id = Guid.NewGuid().ToString() };
-                OrderItemsRecord.OrderId = orders.Id;
+                orderItemsRecord.OrderId = order.Id;
             }
-            OrderItemsRecord.ProductId = product.Id;
-            OrderItemsRecord.ProductName = product.ProductName;
-            _context.OrderItemsRecords.Add(OrderItemsRecord);
+            orderItemsRecord.ProductId = product.Id;
+            orderItemsRecord.ProductName = product.ProductName;
+            _context.OrderItemsRecords.Add(orderItemsRecord);
             await _context.SaveChangesAsync();
             return RedirectToPage("./Index");
         }

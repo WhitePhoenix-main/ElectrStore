@@ -3,6 +3,7 @@
 @model IndexModel
 @inject StoreContext _context
 @inject IProductsRepository _productsRepository
+@inject UserManager<IdentityUser> _UserManager
 
 <link rel="stylesheet" href="css/mainPage.css" asp-append-version="true">
 <link rel="stylesheet" href="css/ProductInd.css" asp-append-version="true"/>
@@ -10,13 +11,6 @@
     <title>Untitled Page</title>
     ViewData["Title"] = "Home page";
 }
-@*@{
-TODO:Убрать костыль для выдачи роли.
-    var userName = User.Identity.Name;
-    var user = await _UserManager.FindByNameAsync(userName);
-    await _UserManager.AddToRoleAsync(user, "Owner");
-    <p>gfgfg</p>
-}*@
 @{
     var search = (string?)ViewData["search"];
     var productType = (string?)ViewData["productType"];
