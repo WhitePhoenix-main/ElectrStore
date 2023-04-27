@@ -1,50 +1,20 @@
-﻿using System;
+﻿using System.Globalization;
+using System.Text.RegularExpressions;
 
 namespace ElectrStore
 {
     public interface INormalizer
     {
-        int GetNormStrRu(string strToNorm);
+        int GetPriceInPennies(string strToNorm);
     }
     public class Normalizer : INormalizer
     {
-        // TODO: Выполнить проверку на числах с одним знаком после запятой/Переделать
-         public int GetNormStrRu(string strToNorm)
+        public int GetPriceInPennies(string strToConvert)
         {
-            string buffer = "";
-            int normPrice = 0;
-            const int symAfter = 2;
-            int symAfterCount = 0;
-            Boolean pointCheck = false;
-            for (int counter1 = 0; counter1 < strToNorm.Length; counter1++)
-            {
-                if (strToNorm[counter1] == '.' || strToNorm[counter1] == ',')
-                {
-                    counter1++;
-                    for (;symAfterCount < symAfter; symAfterCount++, counter1++)
-                    {
-                        buffer += strToNorm[counter1];
-                    }
-
-                    pointCheck = true;
-                    break;
-                }
-                buffer += strToNorm[counter1];
-            }
-
-            if (!pointCheck)
-            {
-                buffer += "00";
-            }
-            try
-            {
-                normPrice = Int32.Parse(buffer);
-            }
-            catch (FormatException)
-            {
-                return -1;
-            }
-            return normPrice;
+            strToConvert = strToConvert.Replace(',', '.');
+            strToConvert = Regex.Replace(strToConvert, "[^0-9/.]", "");
+            strToConvert = Regex.Replace(strToConvert, @"(?<!^\d+)\.", "");
+            return (int)(Decimal.Parse(strToConvert, CultureInfo.InvariantCulture)*100);
         }
     }
 }
