@@ -94,7 +94,7 @@ namespace ElectrStore
 
             ProductRecord.CategoryId = ProductCategory;
             ProductRecord.ProductName = Name;
-            ProductRecord.Price = _normalizer.GetNormStrRu(PriceInput);
+            ProductRecord.Price = _normalizer.GetPriceInPennies(PriceInput);
             ProductRecord.IsHotDeal = ProductHotDeal;
             ProductRecord.DiscountPercent = ProductDiscountPercent ;
             ProductRecord.IsDiscount = ProductIsDiscount;
