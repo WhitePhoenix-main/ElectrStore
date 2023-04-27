@@ -4,6 +4,7 @@
         <TargetFramework>net6.0</TargetFramework>
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
+        <EnableDefaultContentItems>false</EnableDefaultContentItems>
         <UserSecretsId>aspnet-ElectrStore-F6903FF7-9F92-4F33-AB40-8441AE4C5F38</UserSecretsId>
     </PropertyGroup>
 
