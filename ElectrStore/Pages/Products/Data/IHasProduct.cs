@@ -1,4 +1,5 @@
-﻿namespace ElectrStore
+﻿// ReSharper disable once CheckNamespace
+namespace ElectrStore
 {
     public interface IHasProduct
     {

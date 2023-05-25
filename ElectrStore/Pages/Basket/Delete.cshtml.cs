@@ -11,9 +11,9 @@ namespace ElectrStore.Pages.Buscket
 {
     public class DeleteModel : PageModel
     {
-        private readonly ElectrStore.StoreContext _context;
+        private readonly StoreContext _context;
 
-        public DeleteModel(ElectrStore.StoreContext context)
+        public DeleteModel(StoreContext context)
         {
             _context = context;
         }

@@ -2,7 +2,7 @@
 {
     public interface IProductRepository
     {
-        IQueryable<ProductRecord> GetWishProducts(string userId);
+        IQueryable<ProductRecord>? GetWishProducts(string userId);
         Task<(bool success, string? errorMessage)> SaveFileAsync(ProductRecord product, IFormFile formFile);
         public string GetPic(ProductRecord product);
 
@@ -27,7 +27,7 @@
             return Path.Combine(_configuration.GetSection("Storage").Value, product.Id.ToString());
         }
 
-        public IQueryable<ProductRecord> GetWishProducts(string userId)
+        public IQueryable<ProductRecord>? GetWishProducts(string userId)
         {
             return null;
         }
@@ -64,35 +64,27 @@
 
         public async Task<(bool success, string? errorMessage)> SaveFileAsync(ProductRecord product, IFormFile formFile)
         {
-            string? prev = product.PreviewName;
-            string dir = GetDir(product);
-            if (!System.IO.Directory.Exists(dir))
+            var prev = product.PreviewName;
+            var dir = GetDir(product);
+            if (!Directory.Exists(dir))
             {
                 Directory.CreateDirectory(dir);
             }
 
-            string fileName = Path.GetFileName(formFile.FileName);
+            var fileName = Path.GetFileName(formFile.FileName);
             Console.WriteLine("Path.GetFileName(formFile.FileName)");
             if (string.IsNullOrWhiteSpace(fileName))
                 fileName = "picture.png";
-            string path = Path.Combine(dir, fileName);
-            if (System.IO.File.Exists(path))
+            var path = Path.Combine(dir, fileName);
+            if (File.Exists(path))
             {
-                System.IO.File.Delete(path);
+                File.Delete(path);
             }
 
-            await using var stream = System.IO.File.Open(path, FileMode.CreateNew);
+            await using var stream = File.Open(path, FileMode.CreateNew);
             await formFile.CopyToAsync(stream);
             stream.Close();
-            if (product.OnPreview)
-            {
-                product.PreviewName = fileName;
-            }
-            else
-            {
-                product.PreviewName = prev;
-            }
-
+            product.PreviewName = product.OnPreview ? fileName : prev;
             return (true, null);
         }
 

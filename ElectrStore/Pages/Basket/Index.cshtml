@@ -15,7 +15,7 @@
     var order = await _context.OrderRecords.Where(u => u.UserId == userId && u.Status == 0)
         .FirstOrDefaultAsync();
 }
-    <h1>Корзина</h1>
+<h1>Корзина</h1>
 @{
     if (order is not null)
     {
@@ -33,9 +33,7 @@
             </thead>
             <tbody>
             @{
-                List<OrderItemsRecord> items = null;
-
-                items = await _context.OrderItemsRecords.Where(u => u.OrderId == order.Id)
+                var items = await _context.OrderItemsRecords.Where(u => u.OrderId == order.Id)
                     .ToListAsync();
 
                 foreach (var item in items)

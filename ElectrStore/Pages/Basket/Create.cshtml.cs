@@ -12,9 +12,9 @@ namespace ElectrStore.Pages.Buscket
 {
     public class CreateModel : PageModel
     {
-        private readonly ElectrStore.StoreContext _context;
+        private readonly StoreContext _context;
 
-        public CreateModel(ElectrStore.StoreContext context)
+        public CreateModel(StoreContext context)
         {
             _context = context;
         }
@@ -24,8 +24,10 @@ namespace ElectrStore.Pages.Buscket
             return Page();
         }
         // To protect from overposting attacks, see https://aka.ms/RazorPagesCRUD
+        //Создание корзины 
         public async Task<IActionResult> OnPostCreateAsync(string productId, string userId)
         {
+            //Поиск товара по ID
             var product = await _context.ProductRecords.Where(p => p.Id == productId)
                 .FirstOrDefaultAsync();
             var order = await _context.OrderRecords.Where(u => u.UserId == userId && u.Status == 0)

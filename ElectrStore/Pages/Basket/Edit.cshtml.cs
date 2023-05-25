@@ -12,9 +12,9 @@ namespace ElectrStore.Pages.Buscket
 {
     public class EditModel : PageModel
     {
-        private readonly ElectrStore.StoreContext _context;
+        private readonly StoreContext _context;
 
-        public EditModel(ElectrStore.StoreContext context)
+        public EditModel(StoreContext context)
         {
             _context = context;
         }
