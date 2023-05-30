@@ -44,7 +44,8 @@
                 @if (Model.IsDiscount)
                 {
                     <p class="card-text">@priceOut ₽</p>
-                    var priceOutQ = ((decimal)Model.Price * 100 / Model.DiscountPercent / 100.0m);
+                    var priceOutQ = (Model.Price * (1 - 0.1 * Model.DiscountPercent));
+                    <p>@(Model.DiscountPercent)ggdh</p>
                     <p class="card-text">@priceOutQ ₽</p>
                 }
                 else
