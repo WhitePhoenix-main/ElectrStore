@@ -31,8 +31,8 @@
     </div>
 
     <div class="form-group" id="selectorNew" style="display: none">
-        <label asp-for="ProductRecord.ProductTypeNew" class="control-label">Ввод нового типа</label>
-        <input asp-for="ProductRecord.ProductTypeNew" class="form-control"/>
+        <label asp-for="ProductRecord.ProductTypeNew" class="control-label">Ввод новой категории</label>
+        <input asp-for="ProductRecord.ProductTypeNew" class="form-control" required="Введите название нового типа"/>
         <span asp-validation-for="ProductRecord.ProductTypeNew" class="text-danger"></span>
     </div>
     <div class="form-group">

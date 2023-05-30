@@ -2,76 +2,89 @@
 @inject IProductsRepository _productsRepository
 @inject UserManager<IdentityUser> _userManager;
 @{
-    var priceOut = ((decimal)Model.Price / 100.0m).ToString("0.00");
     var product = Model;
 }
-<div>
-    <div class="card mb-3">
-        <div class="wrapper card-picture position-relative">
-            <div class="picture-block">
-                <div class="d-block justify-content-center">
-                    <img class="img-fluid align-items-lg-center" src="@_productsRepository.GetPic(product)" alt="Card image cap"/>
-                </div>
+<div class="col-md-3 col-xs-6">
+    <div class="product">
+        <div class="product-img">
+            <a class="vt-ratio-1x1">
+            <img src="@_productsRepository.GetPic(product)" alt="">
+            </a>
+            <div class="product-label">
+                @{
+                    if (product.DiscountPercent != 0)
+                    {
+                        <span class="sale">@(product.DiscountPercent)%</span>
+                    }
+                }
+                <span class="new">NEW</span>
             </div>
-            @if (User.IsInRole("Owner"))
+        </div>
+        <div class="product-body">
+            <p class="product-category">@product.CategoryId</p>
+            <h3 class="product-name">
+                <a asp-page="/Products/Pages/ProductDetails" asp-route-id="@product.Id">@product.ProductName</a>
+            </h3>
+            @if (product.IsDiscount && product.DiscountPercent > 0)
             {
-                <div class="btns">
-                    <div class="wishlist container-fluid">
-                        <a asp-page="/Products/Pages/ProductDelete" asp-route-id="@Model.Id">
-                            <i class="bi bi-heart"></i>
-                        </a>
-                    </div>
-
-                </div>
-                <div class="settings">
-                    <a asp-page="/Products/Pages/ProductPictureEdit" asp-route-id="@Model.Id">
-                        <i class="bi bi-image"></i>
-                    </a>
-                </div>
-                <div class="text-start position-absolute top-0">
-                    <a asp-page="/Products/Pages/ProductEdit" asp-route-id="@Model.Id">
-                        <i class="bi bi-gear-fill"></i>
-                    </a>
-                </div>
+                <h4 class="product-price">
+                    @(_productsRepository.GetPriceWithDiscount(product.Price, product.DiscountPercent))₽
+                    @if (product.IsDiscount && product.DiscountPercent > 0)
+                    {
+                        <del class="product-old-price">@_productsRepository.GetNormalizedProductPrice(product.Price)₽</del>
+                    }
+                </h4>
             }
-
-        </div>
-        <div class="card-body">
-            <div class="text1 text-center">
-                <a asp-page="/Products/Pages/ProductDetails" asp-route-id="@Model.Id">@Model.ProductName</a>
+            else
+            {
+                <h4 class="product-price">
+                    @(_productsRepository.GetNormalizedProductPrice(product.Price))₽
+                    @if (product.IsDiscount && product.DiscountPercent > 0)
+                    {
+                        <del class="product-old-price">@_productsRepository.GetNormalizedProductPrice(product.Price)₽</del>
+                    }
+                </h4>
+            }
+            <div class="product-rating">
+                <i class="bi bi-star"></i>
+                <i class="bi bi-star"></i>
+                <i class="bi bi-star"></i>
+                <i class="bi bi-star"></i>
+                <i class="bi bi-star"></i>
             </div>
-            <div class="text-center">
-                @if (Model.IsDiscount)
-                {
-                    <p class="card-text">@priceOut ₽</p>
-                    var priceOutQ = (Model.Price * (1 - 0.1 * Model.DiscountPercent));
-                    <p>@(Model.DiscountPercent)ggdh</p>
-                    <p class="card-text">@priceOutQ ₽</p>
-                }
-                else
-                {
-                    <p class="card-text">@priceOut ₽</p>
-                }
+            <div class="product-btns">
+                <button class="add-to-wishlist">
+                    <i class="bi bi-heart"></i><span class="tooltipp">В избранное</span>
+                </button>
+                <button class="add-to-compare">
+                    <i class="bi bi-bar-chart"></i><span class="tooltipp">Сравнить</span>
+                </button>
+                <button class="quick-view">
+                    <i class="bi bi-eye"></i><span class="tooltipp">Просмотр</span>
+                </button>
             </div>
         </div>
+        @*<div class="settings">
+            <a asp-page="/Products/Pages/ProductPictureEdit" asp-route-id="@product.Id">
+                <i class="bi bi-image"></i>
+            </a>
+        </div>*@
         @{
             if (User.Identity.Name is not null)
             {
-
                 var user = await _userManager.FindByNameAsync(User.Identity.Name);
                 var userId = user.Id;
 
-
-                <form method="post"
-                      asp-page="/Basket/Create"
-                      asp-page-handler="Create">
-                    <input type="hidden" name="productId" asp-for="@Model.Id"/>
-                    <input type="hidden" name="userId" asp-for="@userId"/>
-                    <button type="submit" class="btn btn-sm btn-danger">
-                        В корзину
-                    </button>
-                </form>
+                <div class="add-to-cart">
+                    <form method="post"
+                          asp-page="/Basket/Create"
+                          asp-page-handler="Create">
+                        <input type="hidden" name="productId" asp-for="@product.Id"/>
+                        <input type="hidden" name="userId" asp-for="@userId"/>
+                        <button class="add-to-cart-btn"><i class="bi bi-cart"></i> Купить</button>
+                    </form>
+                </div>
             }
         }
-            </div>
+    </div>
 </div>

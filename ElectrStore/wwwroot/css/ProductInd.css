@@ -494,27 +494,19 @@ textarea.input {
 }
 
 .product .add-to-cart {
-    position: absolute;
     left: 1px;
     right: 1px;
     bottom: 1px;
     padding: 15px;
-    background: #1e1f29;
     text-align: center;
-    -webkit-transform: translateY(0%);
-    -ms-transform: translateY(0%);
-    transform: translateY(0%);
     -webkit-transition: 0.2s all;
     transition: 0.2s all;
     z-index: 2;
 }
 
-.product:hover .add-to-cart {
-    -webkit-transform: translateY(100%);
-    -ms-transform: translateY(100%);
-    transform: translateY(100%);
+.add-to-cart{
+    font-size: small;
 }
-
 .product .add-to-cart .add-to-cart-btn {
     position: relative;
     border: 2px solid transparent;
@@ -556,6 +548,26 @@ textarea.input {
 /*----------------------------*\
 	Widget product
 \*----------------------------*/
+
+.vt-ratio-1x1 {
+    display: block;
+    position: relative;
+    padding-top: 100%;
+}
+
+.vt-ratio-1x1 > * {
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    object-fit: cover;
+}
+
 
 .product-widget {
     position: relative;

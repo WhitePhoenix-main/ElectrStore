@@ -9,6 +9,7 @@
         public string GetFolder(ProductRecord product);
 
         public void DelFolderWithFiles(string path);
+        public string GetNormalizedProductPrice(double price);
     }
 
     public class ProductRepository : IProductRepository
@@ -105,6 +106,19 @@
                     Directory.Delete(path);
                 }
             }
+
+        public string GetNormalizedProductPrice(double price)
+            //TODO: В зависимости от локали
+        {
+            var normPrice = price.ToString();
+            var result = "";
+            if (normPrice.EndsWith("00"))
+            {
+                result = normPrice.Substring(0, normPrice.Length - 2) + "," + normPrice.Substring(normPrice.Length - 2);
+            }
+
+            return result;
+        }
 
     }
 }

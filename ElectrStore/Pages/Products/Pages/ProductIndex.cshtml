@@ -147,78 +147,9 @@
         @*TODO: Перенести карточку в partial*@
         @foreach (var product in Model.Product)
         {
-            <div class="col-md-4 col-xs-6">
-                <div class="product">
-                    <div class="product-img">
-                        <img src="@_productsRepository.GetPic(product)" alt="">
-                        <div class="product-label">
-                            @{
-                                if (product.DiscountPercent != 0)
-                                {
-                                    <span class="sale">@(product.DiscountPercent)%</span>
-                                }
-                            }
-                            <span class="new">NEW</span>
-                        </div>
-                    </div>
-                    <div class="product-body">
-                        <p class="product-category">@product.CategoryId</p>
-                        <h3 class="product-name">
-                            <a asp-page="/Products/Pages/ProductDetails" asp-route-id="@product.Id">@product.ProductName</a>
-                        </h3>
-                        <h4 class="product-price">@(product.Price/100 * (1 - (0.1 * product.DiscountPercent)))₽ <del class="product-old-price"> @(product.Price/100.0)₽</del></h4>
-                        <div class="product-rating">
-                            <i class="bi bi-star"></i>
-                            <i class="bi bi-star"></i>
-                            <i class="bi bi-star"></i>
-                            <i class="bi bi-star"></i>
-                            <i class="bi bi-star"></i>
-                        </div>
-                        <div class="product-btns">
-                            <button class="add-to-wishlist">
-                                <i class="bi bi-heart"></i><span class="tooltipp">add to wishlist</span>
-                            </button>
-                            <button class="add-to-compare">
-                                <i class="bi bi-bar-chart"></i><span class="tooltipp">add to compare</span>
-                            </button>
-                            <button class="quick-view">
-                                <i class="bi bi-eye"></i><span class="tooltipp">quick view</span>
-                            </button>
-                        </div>
-                    </div>
-                    <div class="settings">
-                        <a asp-page="/Products/Pages/ProductPictureEdit" asp-route-id="@product.Id">
-                            <i class="bi bi-image"></i>
-                        </a>
-                    </div>
-                    @{
-                        if (User.Identity.Name is not null)
-                        {
-                            var user = await _userManager.FindByNameAsync(User.Identity.Name);
-                            var userId = user.Id;
-
-
-                            <form method="post"
-                                  asp-page="/Basket/Create"
-                                  asp-page-handler="Create">
-                                <input type="hidden" name="productId" asp-for="@product.Id"/>
-                                <input type="hidden" name="userId" asp-for="@userId"/>
-                                <button type="submit" class="btn btn-sm btn-danger">
-                                    В корзину
-                                </button>
-                            </form>
-                        }
-                    }
-                    @*<div class="add-to-cart">
-                                    <a asp-page="/Basket/Create" asp-route-id="@product.Id">
-                                        <button class="add-to-cart-btn"><i class="bi bi-cart"></i> add to cart</button>
-                                    </a>
-                                </div>*@
-                </div>
-            </div>
+            <partial name="Products/Partials/ProductCardPartial" model="product"/>
         }
     </div>
-
     <!-- /store products -->
 
     <!-- store bottom filter -->

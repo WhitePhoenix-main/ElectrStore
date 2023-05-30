@@ -1,5 +1,6 @@
 ﻿
 using System;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -17,6 +18,10 @@ namespace ElectrStore
         public string GetFolder(ProductRecord product);
 
         public void DelFolderWithFiles(string path);
+        
+        public string GetNormalizedProductPrice(double price);
+
+        public string GetPriceWithDiscount(double price, int discount);
     }
 
     public class ProductsRepository : IProductsRepository
@@ -114,6 +119,31 @@ namespace ElectrStore
                 }
                 Directory.Delete(path);
             }
+        }
+        public string GetNormalizedProductPrice(double price)
+            //TODO: В зависимости от локали
+        {
+            var normPrice = price.ToString(CultureInfo.InvariantCulture);
+            var result = "";
+            if (normPrice.Substring(normPrice.Length - 2) == "00")
+            {
+                result = normPrice.Substring(0, normPrice.Length - 2) + "," + normPrice.Substring(normPrice.Length - 2);
+            }
+            else if (normPrice.Substring(normPrice.Length - 1) == "0")
+            {
+                result = normPrice.Substring(0, normPrice.Length - 2) + "," + normPrice.Substring(normPrice.Length - 2);
+            }
+            else
+            {
+                result = (price / 100.0).ToString(CultureInfo.CurrentCulture);
+            }
+            return result;
+        }
+
+        public string GetPriceWithDiscount(double price, int discount)
+        {
+            var priceWithDiscount = price * (1 - 0.01 * discount);
+            return GetNormalizedProductPrice(priceWithDiscount);
         }
     }
 }
