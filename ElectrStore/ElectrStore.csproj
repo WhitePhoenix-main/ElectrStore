@@ -1636,6 +1636,7 @@
       <_ContentIncludedByDefault Remove="wwwroot\lib\bootstrap\css\bootstrap.rtl.css.map" />
       <_ContentIncludedByDefault Remove="wwwroot\lib\bootstrap\css\bootstrap.rtl.min.css" />
       <_ContentIncludedByDefault Remove="wwwroot\lib\bootstrap\css\bootstrap.rtl.min.css.map" />
+      <_ContentIncludedByDefault Remove="wwwroot\pics\45401e60-9b0a-4425-b7a8-87721ef10d05\logo.png" />
     </ItemGroup>
 
 </Project>

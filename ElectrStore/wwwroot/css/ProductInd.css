@@ -484,7 +484,6 @@ textarea.input {
     -webkit-transition: 0.2s all;
     transition: 0.2s all;
 }
-
 .product .product-body .product-btns>button:hover .tooltipp {
     opacity: 1;
     visibility: visible;
@@ -567,7 +566,6 @@ textarea.input {
     overflow: hidden;
     object-fit: cover;
 }
-
 
 .product-widget {
     position: relative;

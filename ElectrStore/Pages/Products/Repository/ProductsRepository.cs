@@ -13,7 +13,7 @@ namespace ElectrStore
     {
         IQueryable<ProductRecord> GetWishProducts(string userId);
         Task<(bool success, string? errorMessage)> SaveFileAsync(ProductRecord product, IFormFile formFile);
-        public string GetPic(ProductRecord product);
+        public string GetPreviewPic(ProductRecord product);
 
         public string GetFolder(ProductRecord product);
 
@@ -58,18 +58,30 @@ namespace ElectrStore
         {
             return GetDir(product);
         }
-
         public string GetPic(ProductRecord product)
         {
             if (product.PreviewName is null)
             {
                 return _configuration.GetSection("DefaultPic").Value;
             }
-            else
+
+            var dir = GetDir(product);
+            foreach (var image in dir)
             {
-                var path = Path.Combine(GetDir(product), product.PreviewName);
-                return path.Substring(path.IndexOf("\\pics"));
+                
             }
+            var path = Path.Combine(GetDir(product), product.PreviewName);
+            return path.Substring(path.IndexOf("\\pics"));
+        }
+        public string GetPreviewPic(ProductRecord product)
+        {
+            if (product.PreviewName is null)
+            {
+                return _configuration.GetSection("DefaultPic").Value;
+            }
+
+            var path = Path.Combine(GetDir(product), product.PreviewName);
+            return path.Substring(path.IndexOf("\\pics"));
         }
         public async Task<(bool success, string? errorMessage)> SaveFileAsync(ProductRecord product, IFormFile formFile)
         {
@@ -80,7 +92,6 @@ namespace ElectrStore
                 Directory.CreateDirectory(dir);
             }
             var fileName = Path.GetFileName(formFile.FileName);
-            Console.WriteLine("Path.GetFileName(formFile.FileName)");
             if (string.IsNullOrWhiteSpace(fileName))
                 fileName = "picture.png";
             var path = Path.Combine(dir, fileName);

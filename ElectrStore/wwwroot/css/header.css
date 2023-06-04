@@ -5,6 +5,10 @@
     color: #fff;
     font-family: Verdana, serif;
 }
+.custom-container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
 .header-links {
     margin: 0;
     font-size: 12px;
@@ -124,6 +128,9 @@
 .breadcrumb-tree li a:hover {
     color: #D10024;
 }
-
-
+@media (min-width: 1400px) {
+    .container, .container-sm, .container-md, .container-lg, .container-xl {
+        max-width: 1400px;
+    }
+}
 

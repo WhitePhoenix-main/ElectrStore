@@ -74,28 +74,33 @@
                     </button>
                 </div>
             </div>
-            <div class="hot-products shadow p-0">
-                <div class="title-block mt-2">
-                    <span>Популярные товары</span>
-                </div>
-                @{
-                    var product = (string?)ViewData["IsHotDeal"];
-                    var products = _context.ProductRecords.AsNoTracking()
-                        .Where(product => product.IsHotDeal == true)
-                        .OrderBy(product => product.Id)
-                        .Distinct()
-                        .ToList();
-                }
-                <div class="row row-cols-2 row-cols-md-3 row-cols-lg-4 justify-content-around">
+            @if(_context.ProductRecords.AsNoTracking()
+                .ToList()
+                .Count > 0)
+            {
+                <div class="hot-products shadow p-0">
+                    <div class="title-block mt-2">
+                        <span>Популярные товары</span>
+                    </div>
                     @{
-                        foreach (var item in products)
-                        {
-                            var priceOut = ((decimal)item.Price / 100.0m).ToString("0.00");
-                            <partial name="Products/Partials/ProductCardPartial" model="@item" />
-                        }
+                        var product = (string?)ViewData["IsHotDeal"];
+                        var products = _context.ProductRecords.AsNoTracking()
+                            .Where(product => product.IsHotDeal == true)
+                            .OrderBy(product => product.Id)
+                            .Distinct()
+                            .ToList();
                     }
+                    <div class="row row-cols-2 row-cols-md-3 row-cols-lg-4 justify-content-around">
+                        @{
+                            foreach (var item in products)
+                            {
+                                var priceOut = ((decimal)item.Price / 100.0m).ToString("0.00");
+                                <partial name="Products/Partials/ProductCardPartial" model="@item" />
+                            }
+                        }
+                    </div>
                 </div>
-            </div>
+            }
         </div>
     </div>
 </div>

@@ -36,6 +36,8 @@ namespace ElectrStore
         
         [BindProperty] public bool ProductIsDiscount { get; set; }
         [BindProperty] public string? PriceInput { get; set; }
+        
+        [BindProperty] public string? ProductDescription { get; set; }
 
         public async Task<IActionResult> OnGetAsync(string id)
         {
@@ -52,11 +54,12 @@ namespace ElectrStore
             //TODO: Тут используется CategoryId, очевидно, что должна быть потом ещё одна таблица
             ProductCategory = ProductRecord.CategoryId;
             Name = ProductRecord.ProductName;
-            PriceInput = ProductRecord.PriceInput;
+            ProductPrice = ProductRecord.Price;
             ProductQuantity = ProductRecord.Quantity;
             ProductHotDeal = ProductRecord.IsHotDeal;
             ProductDiscountPercent = ProductRecord.DiscountPercent;
             ProductIsDiscount = ProductRecord.IsDiscount;
+            ProductDescription = ProductRecord.ProductDescription;
             return Page();
         }
 
@@ -74,6 +77,7 @@ namespace ElectrStore
             }
 
             ProductRecord.Quantity = ProductQuantity;
+            ProductRecord.ProductDescription = ProductDescription;
             _context.Update(ProductRecord);
             await _context.SaveChangesAsync();
             //TODO: Спросить как перенаправлять на страницу с поиском, а не где все товары
@@ -94,10 +98,12 @@ namespace ElectrStore
 
             ProductRecord.CategoryId = ProductCategory;
             ProductRecord.ProductName = Name;
-            ProductRecord.Price = _normalizer.GetPriceInPennies(PriceInput);
+            ProductRecord.Price = ProductPrice;
             ProductRecord.IsHotDeal = ProductHotDeal;
             ProductRecord.DiscountPercent = ProductDiscountPercent ;
             ProductRecord.IsDiscount = ProductIsDiscount;
+            ProductRecord.ProductDescription = ProductDescription;
+            ProductRecord.Quantity = ProductQuantity;
             _context.Update(ProductRecord);
             await _context.SaveChangesAsync();
             return RedirectToPage("/Products/Pages/ProductIndex");
