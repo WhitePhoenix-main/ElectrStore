@@ -163,12 +163,29 @@
                         @{
                          
                             Model.PageNumber = 1;
+                            int counter = 1;
                             for (int i = 0; i < Model.Counter; i += Model.PageSize)
                             {
-                                <li>
-                                <a href="?RecordType=@Model.RecordType&SearchText=@Model.SearchText&PageSize=@Model.PageSize&PageNumber=@Model.PageNumber">@(Model.PageNumber)</a>
-                                @(Model.PageNumber++)
-                                </li>
+                                if (counter == Model.PageNumber)
+                                {
+                                    <li>
+                                        <a href="?RecordType=@Model.RecordType&SearchText=@Model.SearchText&PageSize=@Model.PageSize&PageNumber=@Model.PageNumber">@(Model.PageNumber)</a>
+                                        @{
+                                            Model.PageNumber++;
+                                            counter++;
+                                        }
+                                    </li>
+                                }
+                                else
+                                {
+                                    <li>
+                                        <a href="?RecordType=@Model.RecordType&SearchText=@Model.SearchText&PageSize=@Model.PageSize&PageNumber=@Model.PageNumber">@(Model.PageNumber)</a>
+                                        @{
+                                            Model.PageNumber++;
+                                            counter++;
+                                        }
+                                    </li>
+                                }
                             }
                         }
                         @*<li class="active">1</li>

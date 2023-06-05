@@ -23,6 +23,7 @@ namespace ElectrStore.Pages.Buscket
         {
             return Page();
         }
+
         // To protect from overposting attacks, see https://aka.ms/RazorPagesCRUD
         //Создание корзины 
         public async Task<IActionResult> OnPostCreateAsync(string productId, string userId)
@@ -32,7 +33,6 @@ namespace ElectrStore.Pages.Buscket
                 .FirstOrDefaultAsync();
             var order = await _context.OrderRecords.Where(u => u.UserId == userId && u.Status == 0)
                 .FirstOrDefaultAsync();
-            var orderItemsRecord = new OrderItemsRecord { Id = Guid.NewGuid().ToString() };
             if (order is null)
             {
                 order = new OrderRecord { Id = Guid.NewGuid().ToString() };
@@ -40,16 +40,33 @@ namespace ElectrStore.Pages.Buscket
                 order.UserId = userId;
                 _context.OrderRecords.Add(order);
                 await _context.SaveChangesAsync();
+            }
+
+            var productCheck = _context.OrderItemsRecords
+                .Where(p => p.ProductId == product.Id && order.UserId == userId && order.Status == 0 && order.Id == p.OrderId)
+                .ToList();
+            if (productCheck.Count == 0)
+            {
+                var orderItemsRecord = new OrderItemsRecord { Id = Guid.NewGuid().ToString() };
                 orderItemsRecord.OrderId = order.Id;
+                orderItemsRecord.ProductId = product.Id;
+                orderItemsRecord.ProductName = product.ProductName;
+                orderItemsRecord.BuyQuantity += 1;
+                orderItemsRecord.Price = product.Price;
+                _context.OrderItemsRecords.Add(orderItemsRecord);
+                await _context.SaveChangesAsync();
+                return RedirectToPage("./Index");
             }
             else
             {
-                orderItemsRecord.OrderId = order.Id;
+                foreach (var orderItem in productCheck)
+                {
+                    orderItem.BuyQuantity += 1;
+                    await _context.SaveChangesAsync();
+                    return RedirectToPage("./Index");
+                }
             }
-            orderItemsRecord.ProductId = product.Id;
-            orderItemsRecord.ProductName = product.ProductName;
-            _context.OrderItemsRecords.Add(orderItemsRecord);
-            await _context.SaveChangesAsync();
+
             return RedirectToPage("./Index");
         }
     }

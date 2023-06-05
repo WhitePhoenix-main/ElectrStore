@@ -4,6 +4,7 @@
 @model ElectrStore.Pages.Buscket.IndexModel
 @inject UserManager<IdentityUser> _userManager
 @inject StoreContext _context
+@inject IProductsRepository _productsRepository
 
 
 @{
@@ -26,9 +27,17 @@
                     Название
                 </th>
                 <th>
-                    Идентификатор корзины
+                    Изображение
                 </th>
-                <th></th>
+                <th>
+                    Категория
+                </th>
+                <th>
+                    Количество
+                </th>
+                <th>
+                    Сумма
+                </th>
             </tr>
             </thead>
             <tbody>
@@ -38,32 +47,69 @@
 
                 foreach (var item in items)
                 {
-                    <tr>
-                        <td>
-                            <p>@item.ProductName</p>
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.OrderId)
-                        </td>
-                        <td>
-                            <a asp-page="./Edit" asp-route-id="@item.Id">Edit</a> |
-                            <a asp-page="./Details" asp-route-id="@item.Id">Details</a> |
-                            <a asp-page="./Delete" asp-route-id="@item.Id">Удалить</a>
-                        </td>
-                    </tr>
+                    var product = _context.ProductRecords
+                        .Where(product => product.Id == item.ProductId)
+                        .ToList();
+                    foreach (var elem in product)
+                    {
+                        <tr>
+                            <td>
+                                <p>@elem.ProductName</p>
+                            </td>
+                            <td>
+                                <a class="vt-ratio-1x1">
+                                    <img src="@_productsRepository.GetPreviewPic(elem)" alt="">
+                                </a>
+                            </td>
+                            <td>
+                                <p>@elem.CategoryId</p>
+                            </td>
+                            <td>
+                                @if (item.BuyQuantity > elem.Quantity)
+                                {
+                                    Model.AvaChecker = false;
+                                    <p class="text-danger">На складе столько нет!</p>
+                                }
+                                <p>@item.BuyQuantity</p>
+                            </td>
+                            <td>
+                                <p>@{
+                                       string text;
+                                       if (elem.IsDiscount)
+                                       {
+                                           var sum = item.Price * item.BuyQuantity;
+                                           text = _productsRepository.GetNormalizedProductPrice(Convert.ToDouble(sum));
+                                       }
+                                       else
+                                       {
+                                           var sum = item.Price * item.BuyQuantity;
+                                           text = _productsRepository.GetPriceWithDiscount(Convert.ToDouble(sum), elem.DiscountPercent);
+                                       }
+                                   } @text P</p>
+                            </td>
+                            <td>
+                                <a asp-page="./Edit" asp-route-id="@item.Id">Редактировать</a>
+                                <a asp-page="./Delete" asp-route-id="@item.Id">Удалить</a>
+                            </td>
+                        </tr>
+                    }
                 }
 
             }
             </tbody>
         </table>
-        <form method="post"
-              asp-page-handler="SubmitOrder">
-            <input type="hidden" name="userId" asp-for="@userId"/>
-            <button>
-                Заказать
-            </button>
-        </form>
+        @if (Model.AvaChecker)
+        {
+            <form method="post"
+                  asp-page-handler="SubmitOrder">
+                <input type="hidden" name="userId" asp-for="@userId"/>
+                <button>
+                    Заказать
+                </button>
+            </form>
+        }
     }
+
     else
     {
         <h2>Корзина пуста!</h2>

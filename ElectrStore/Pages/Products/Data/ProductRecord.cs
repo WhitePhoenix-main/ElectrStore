@@ -19,7 +19,7 @@ public class ProductRecord
             
     public bool IsDiscount { get; set; }
 
-    public string ProductDescription { get; set; } = "";
+    public string? ProductDescription { get; set; } = "";
 
     [NotMapped] public bool OnPreview { get; set; }
     
