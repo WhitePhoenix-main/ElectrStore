@@ -13,7 +13,16 @@
 </head>
 @{
     var product = Model.ProductRecord;
-    var images = Directory.GetFiles(_productsRepository.GetFolder(product));
+    var images = Array.Empty<string>();
+    if (Directory.Exists(_productsRepository.GetFolder(product)))
+    {
+        images = Directory.GetFiles(_productsRepository.GetFolder(product));
+    }
+    else
+    {
+        images = Array.Empty<string>();
+    }
+
 }
 <div class="container">
 <!-- row -->
@@ -21,15 +30,18 @@
 <div class="col-md-2">
     <div id="product-imgs">
         @{
-            foreach (var picture in images)
+            if (images.Length != 0)
             {
+                foreach (var picture in images)
                 {
-                    var picturePath = picture.Substring(picture.IndexOf("\\pics"));
-                    if (!picturePath.Contains(product.PreviewName))
                     {
-                        <div class="product-preview">
-                            <img class="w-100" src="@(picturePath)" alt="">
-                        </div>
+                        var picturePath = picture.Substring(picture.IndexOf("\\pics"));
+                        if (!picturePath.Contains(product.PreviewName))
+                        {
+                            <div class="product-preview">
+                                <img class="w-100" src="@(picturePath)" alt="">
+                            </div>
+                        }
                     }
                 }
             }
@@ -61,20 +73,24 @@
                 <i class="fa fa-star"></i>
                 <i class="fa fa-star-o"></i>
             </div>
-            <a class="review-link" href="#">10 Review(s) | Add your review</a>
+            <a class="review-link" href="#">3 отзыва | Добавить отзыв</a>
         </div>
         <div>
             @if (product.DiscountPercent > 0 && product.DiscountPercent < 100 && product.IsDiscount)
             {
-                <h3 class="product-price">@(_productsRepository.GetPriceWithDiscount(product.Price, product.DiscountPercent))₽
-                    <del class="product-old-price">@(_productsRepository
-                                                       .GetNormalizedProductPrice(product.Price))₽</del>
+                <h3 class="product-price">
+                    @(_productsRepository.GetPriceWithDiscount(product.Price, product.DiscountPercent))₽
+                    <del class="product-old-price">
+                        @(_productsRepository
+                            .GetNormalizedProductPrice(product.Price))₽
+                    </del>
                 </h3>
             }
             else
             {
-                <h3 class="product-price">@(_productsRepository
-                                              .GetNormalizedProductPrice(product.Price))₽
+                <h3 class="product-price">
+                    @(_productsRepository
+                        .GetNormalizedProductPrice(product.Price))₽
                 </h3>
             }
             @if (product.Quantity > 0)
@@ -88,7 +104,7 @@
         </div>
         <p>@(product.ProductDescription)</p>
 
-        <div class="product-options">
+        @*<div class="product-options">
             <label>
                 Size
                 <select class="input-select">
@@ -101,36 +117,56 @@
                     <option value="0">Red</option>
                 </select>
             </label>
-        </div>
+        </div>*@
 
         <div class="add-to-cart">
             <div class="qty-label">
-                Qty
+                Количество
                 <div class="input-number">
                     <input type="number">
                     <span class="qty-up">+</span>
                     <span class="qty-down">-</span>
                 </div>
             </div>
-            <button class="add-to-cart-btn"><i class="fa fa-shopping-cart"></i> add to cart</button>
+            @{
+                var test = product.Quantity;
+                test = test;
+            }
+            @{
+                if (User.Identity.Name is not null && product.Quantity > 0)
+                {
+                    var user = await _userManager.FindByNameAsync(User.Identity.Name);
+                    var userId = user.Id;
+                    <div class="pt-3">
+                        <form method="post"
+                              asp-page="/Basket/Create"
+                              asp-page-handler="Create">
+                            <input type="hidden" name="productId" asp-for="@product.Id"/>
+                            <input type="hidden" name="userId" asp-for="@userId"/>
+                            <button class="add-to-cart-btn"><i class="bi bi-cart"></i> В корзину</button>
+                        </form>
+                    </div>
+                }
+            }
+            @if (product.Quantity == 0)
+            {
+                <button class="btn btn-danger disabled">Нет в наличии</button>
+            }
         </div>
 
         <ul class="product-btns">
             <li>
-                <a href="#"><i class="fa fa-heart-o"></i> add to wishlist</a>
+                <a href="#"><i class="bi bi-heart"></i>В желаемое</a>
             </li>
             <li>
-                <a href="#"><i class="fa fa-exchange"></i> add to compare</a>
+                <a href="#"><i class="fa fa-exchange"></i>Сравнить</a>
             </li>
         </ul>
 
         <ul class="product-links">
-            <li>Category:</li>
+            <li>Категория:</li>
             <li>
-                <a href="#">Headphones</a>
-            </li>
-            <li>
-                <a href="#">Accessories</a>
+                <a href="#">@(product.CategoryId)</a>
             </li>
         </ul>
 

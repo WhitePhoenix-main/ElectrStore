@@ -11,9 +11,9 @@
                     <partial name="Partials/_FindFormPartial"/>
                 </div>
             </div>
-            <div class="header-btn col-md-4 d-flex">
-                @if (User.Identity?.IsAuthenticated ?? false)
-                {
+            @if (User.Identity?.IsAuthenticated ?? false)
+            {
+                <div class="header-btn col-md-4 d-flex">
                     <div class="container justify-content-between p-0">
                         <div class="compare-btn">
                             <a asp-area="Identity" asp-page="#">
@@ -49,47 +49,18 @@
                             <span>Выход</span>
                         </a>
                     </div>
-                }
-                else
-                {
-                    <div class="container justify-content-between p-0">
-                        <div class="compare-btn">
-                            <a asp-area="Identity" asp-page="#">
-                                <div class="header-icons">
-                                    <i class="bi bi-bar-chart"></i>
-                                </div>
-                                <span>Сравнить</span>
-                            </a>
-                        </div>
-                        <div class="wishlist-btn">
-                            <a asp-area="Identity" asp-page="Account/Login">
-                                <div class="header-icons">
-                                    <i class="bi bi-heart"></i>
-                                </div>
-                                <span>Избранное</span>
-                            </a>
-                        </div>
-                        @if (User.Identity.IsAuthenticated)
-                        {
-                            <div class="cart-btn">
-                                <a asp-area="Identity" asp-page="#">
-                                    <div class="header-icons">
-                                        <i class="bi bi-cart3"></i>
-                                    </div>
-                                    <span>Корзина</span>
-                                </a>
-                            </div>
-                        }
-                    </div>
-                    <div class="text-end align-self-center">
-                        <a class="btn login-btn" asp-area="Identity" asp-page="/Account/Login">
+                </div>
+            }
+            else
+            {
+                <div class="col-md-4 d-flex justify-content-end">
+                        <a class="btn login-btn position-relative" asp-area="Identity" asp-page="/Account/Login">
                             <span>
                                 Войти
                             </span>
                         </a>
                     </div>
-                }
-            </div>
+            }
         </div>
     </div>
 </div>

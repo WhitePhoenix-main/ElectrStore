@@ -23,11 +23,11 @@ namespace ElectrStore
             if (!string.IsNullOrWhiteSpace(search) && string.IsNullOrWhiteSpace(productType))
                 query = query
                     .Where(product => product.CategoryId == search 
-                    || product.ProductName == search);
+                    || product.ProductName.Contains(search));
             else if (!string.IsNullOrWhiteSpace(productType) && !string.IsNullOrWhiteSpace(search))
                 query = query
                     .Where(product => product.CategoryId == productType
-                                      || product.ProductName == search);
+                                      || product.ProductName.Contains(search));
             else if (!string.IsNullOrWhiteSpace(productType) )
                 query = query
                     .Where(product => product.CategoryId == productType);
