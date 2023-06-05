@@ -4,7 +4,7 @@
 @{
     var product = Model;
 }
-<div class="col-md-3 col-xs-6">
+<div class="col-md-3 col-xs-6 pt-1 pb-5">
     <div class="product">
         <div class="product-img">
             <a class="vt-ratio-1x1">
@@ -52,37 +52,45 @@
                 <i class="bi bi-star"></i>
                 <i class="bi bi-star"></i>
             </div>
-            <div class="product-btns">
-                <button class="add-to-wishlist">
-                    <i class="bi bi-heart"></i><span class="tooltipp">В избранное</span>
-                </button>
-                <button class="add-to-compare">
-                    <i class="bi bi-bar-chart"></i><span class="tooltipp">Сравнить</span>
-                </button>
-                <button class="quick-view">
-                    <i class="bi bi-eye"></i><span class="tooltipp">Просмотр</span>
-                </button>
-            </div>
+            @if (User.Identity.IsAuthenticated)
+            {
+                <div class="product-btns">
+                    <button class="add-to-wishlist">
+                        <i class="bi bi-heart"></i><span class="tooltipp">В избранное</span>
+                    </button>
+                    <button class="add-to-compare">
+                        <i class="bi bi-bar-chart"></i><span class="tooltipp">Сравнить</span>
+                    </button>
+                    <button class="quick-view">
+                        <i class="bi bi-eye"></i><span class="tooltipp">Просмотр</span>
+                    </button>
+                    @if (User.IsInRole("Owner"))
+                    {
+                        <button class="add-to-wishlist">
+                            <a asp-page="/Products/Pages/ProductPictureEdit" asp-route-id="@product.Id">
+                                <i class="bi bi-image"></i>
+                                <span class="tooltipp">Редактирование изображений</span>
+                            </a>
+                        </button>
+                        <button class="add-to-wishlist">
+                            <a asp-page="/Products/Pages/ProductEdit" asp-route-id="@product.Id">
+                                <i class="bi bi-gear"></i>
+                                <span class="tooltipp">Редактирование карточки</span>
+                            </a>
+                        </button>
+                    }
+                </div>
+            }
         </div>
-        @if (User.IsInRole("Owner"))
-        {
-            <div class="settings">
-                <a asp-page="/Products/Pages/ProductPictureEdit" asp-route-id="@product.Id">
-                    <i class="bi bi-image"></i>
-                </a>
-            </div>
-            <div class="settings">
-                <a asp-page="/Products/Pages/ProductEdit" asp-route-id="@product.Id">
-                    <i class="bi bi-image"></i>
-                </a>
-            </div>
-        }
         @{
+            string? userId = "";
             if (User.Identity.Name is not null)
             {
                 var user = await _userManager.FindByNameAsync(User.Identity.Name);
-                var userId = user.Id;
-
+                userId = user.Id;
+            }
+            if (User.Identity.Name is not null && product.Quantity > 0)
+            {
                 <div class="add-to-cart">
                     <form method="post"
                           asp-page="/Basket/Create"
@@ -90,6 +98,18 @@
                         <input type="hidden" name="productId" asp-for="@product.Id"/>
                         <input type="hidden" name="userId" asp-for="@userId"/>
                         <button class="add-to-cart-btn"><i class="bi bi-cart"></i> Купить</button>
+                    </form>
+                </div>
+            }
+            else if (product.Quantity <= 0 && User.Identity.Name is not null)
+            {
+                <div class="add-to-cart">
+                    <form method="post"
+                          asp-page="/Basket/Create"
+                          asp-page-handler="Create">
+                        <input type="hidden" name="productId" asp-for="@product.Id"/>
+                        <input type="hidden" name="userId" asp-for="@userId"/>
+                        <button class="btn btn-danger disabled">Нет в наличии</button>
                     </form>
                 </div>
             }

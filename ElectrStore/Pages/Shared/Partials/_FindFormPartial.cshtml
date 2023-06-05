@@ -2,18 +2,18 @@
 @using Microsoft.AspNetCore.Mvc.TagHelpers
 @inject StoreContext _context
 @{
-    var search = (string?)ViewData["search"];
-    var productType = (string?)ViewData["productType"] ;
+    var search = (string?)ViewData["SearchText"];
+    var RecordType = (string?)ViewData["RecordType"] ;
     var productTypes = _context.ProductRecords.AsNoTracking()
         .Select(x => x.CategoryId)
         .OrderBy(x => x)
         .Distinct()
-        .Select(x => new SelectListItem(x, x, x == productType))
+        .Select(x => new SelectListItem(x, x, x == RecordType))
         .ToList();
     productTypes.Insert(0, new SelectListItem("Все категории", ""));
 }
 <form method="get" action="/Product/Index">
-    <select class="input-select" name="ProductType" asp-items="productTypes"></select>
-    <input class="input" placeholder="Поиск по сайту" name="search" value="@search"/>
+    <select class="input-select" name="RecordType" asp-items="productTypes"></select>
+    <input class="input" placeholder="Поиск по сайту" name="SearchText" value="@search"/>
     <button type="submit" class="search-btn"><i class="bi bi-search"></i></button>
 </form>
