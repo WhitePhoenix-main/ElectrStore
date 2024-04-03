@@ -5,9 +5,9 @@ namespace ElectrStore;
 [Table(("Product"))]
 public class ProductRecord
 {
-    [Key] [Column(TypeName = "nvarchar(100)")] public string? Id { get; set; }
-    [Column(TypeName = "nvarchar(150)")]public string? CategoryId { get; set; }
-    [Column(TypeName = "nvarchar(200)")]public string? ProductName { get; set; } = "";
+    [Key] [Column(TypeName = "varchar(100)")] public string? Id { get; set; }
+    [Column(TypeName = "varchar(150)")]public string? CategoryId { get; set; }
+    [Column(TypeName = "varchar(200)")]public string? ProductName { get; set; } = "";
     public int Price { get; set; }
     public string? PreviewName { get; set; }
             
