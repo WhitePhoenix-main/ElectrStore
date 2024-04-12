@@ -40,7 +40,7 @@ namespace ElectrStore
             }
 
             ProductRecord.Price = _normalizer.GetPriceInPennies(ProductRecord.PriceInput);
-            ProductRecord.CreationTime = DateTime.Now;
+            ProductRecord.CreationTime = DateTime.UtcNow;
             ProductRecord.EditorName = User.Identity.Name;
             _context.ProductRecords.Add(ProductRecord);
             await _context.SaveChangesAsync();
