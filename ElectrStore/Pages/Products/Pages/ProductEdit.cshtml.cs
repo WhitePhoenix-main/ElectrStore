@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 
+// ReSharper disable once CheckNamespace
 namespace ElectrStore
 {
     [Authorize(Roles = "Owner")]
@@ -20,7 +21,7 @@ namespace ElectrStore
 
         private IProductsRepository _productsRepository { get; init; }
 
-        public ProductRecord ProductRecord { get; set; }
+        public ProductRecord? ProductRecord { get; set; }
         public bool IsNewRec { get; set; }
         [BindProperty] public string? ProductId { get; set; }
         
@@ -42,14 +43,11 @@ namespace ElectrStore
         public async Task<IActionResult> OnGetAsync(string id)
         {
             if (string.IsNullOrWhiteSpace(id))
-            {
                 return BadRequest();
-            }
-            ProductRecord = await _context.ProductRecords.FirstOrDefaultAsync(m => m.Id == id);
-            if (ProductRecord == null)
-            {
+            ProductRecord = await _context.ProductRecords
+                .FirstOrDefaultAsync(m => m.Id == id);
+            if (ProductRecord is null)
                 return NotFound();
-            }
             ProductId = id;
             //TODO: Тут используется CategoryId, очевидно, что должна быть потом ещё одна таблица
             ProductCategory = ProductRecord.CategoryId;
@@ -66,16 +64,11 @@ namespace ElectrStore
         public async Task<IActionResult> OnPostSetQuantityAsync()
         {
             if (string.IsNullOrWhiteSpace(ProductId))
-            {
                 return BadRequest();
-            }
             ProductRecord = await _context.Set<ProductRecord>()
                 .FirstOrDefaultAsync(x => x.Id == ProductId);
             if (ProductRecord is null)
-            {
                 return NotFound();
-            }
-
             ProductRecord.Quantity = ProductQuantity;
             ProductRecord.ProductDescription = ProductDescription;
             _context.Update(ProductRecord);
@@ -86,16 +79,11 @@ namespace ElectrStore
         public async Task<IActionResult> OnPostAsync()
         {
             if (string.IsNullOrWhiteSpace(ProductId))
-            {
                 return BadRequest();
-            }
             ProductRecord = await _context.Set<ProductRecord>()
                 .FirstOrDefaultAsync(x => x.Id == ProductId);
             if (ProductRecord is null)
-            {
                 return NotFound();
-            }
-
             ProductRecord.CategoryId = ProductCategory;
             ProductRecord.ProductName = Name;
             ProductRecord.Price = ProductPrice;
