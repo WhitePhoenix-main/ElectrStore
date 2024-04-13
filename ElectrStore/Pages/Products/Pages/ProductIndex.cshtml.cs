@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 
+// ReSharper disable once CheckNamespace
 namespace ElectrStore
 {
     public class ProductIndexModel : PageModel
@@ -31,11 +32,11 @@ namespace ElectrStore
             if (!string.IsNullOrWhiteSpace(SearchText) && string.IsNullOrWhiteSpace(RecordType))
                 query = query
                     .Where(product => product.CategoryId == SearchText 
-                    || product.ProductName.Contains(SearchText));
+                    || product.ProductName!.Contains(SearchText));
             else if (!string.IsNullOrWhiteSpace(RecordType) && !string.IsNullOrWhiteSpace(SearchText))
                 query = query
                     .Where(product => product.CategoryId == RecordType
-                                      || product.ProductName.Contains(SearchText));
+                                      || product.ProductName!.Contains(SearchText));
             else if (!string.IsNullOrWhiteSpace(RecordType) )
                 query = query
                     .Where(product => product.CategoryId == RecordType);

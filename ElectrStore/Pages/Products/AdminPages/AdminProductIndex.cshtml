@@ -22,7 +22,6 @@
             <div id="aside" class="col-md-3">
                 <div class="aside">
                     @{
-                        var search = (string?)ViewData["search"];
                         var productType = (string?)ViewData["productType"];
                         var productTypes = _context.ProductRecords.AsNoTracking()
                             .Select(x => x.CategoryId)
