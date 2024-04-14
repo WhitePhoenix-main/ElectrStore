@@ -53,6 +53,7 @@ namespace ElectrStore.Pages.Buscket
                 orderItemsRecord.ProductName = product.ProductName;
                 orderItemsRecord.BuyQuantity += 1;
                 orderItemsRecord.Price = product.Price;
+                order.TotalAmount = product.Price * orderItemsRecord.BuyQuantity;
                 _context.OrderItemsRecords.Add(orderItemsRecord);
                 await _context.SaveChangesAsync();
                 return RedirectToPage("./Index");

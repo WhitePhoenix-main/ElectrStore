@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
@@ -40,6 +36,7 @@ namespace ElectrStore.Pages.Buscket
             var orderItems = _context.OrderItemsRecords
                 .Where(orItems => order.Id == orItems.OrderId && order.Status == 0)
                 .ToList();
+            int totalAmount = 0;
             foreach (var orderItem in orderItems)
             {
                 var item = _context.ProductRecords
@@ -48,11 +45,12 @@ namespace ElectrStore.Pages.Buscket
                 foreach (var product in item)
                 {
                     product.Quantity -= orderItem.BuyQuantity;
+                    totalAmount += orderItem.BuyQuantity * product.Price;
                     _context.ProductRecords.Update(product);
                 }
             }
             order.Status = 1;
-            
+            order.TotalAmount = totalAmount;
             _context.OrderRecords.Update(order);
             await _context.SaveChangesAsync();
             return RedirectToPage("/Index");

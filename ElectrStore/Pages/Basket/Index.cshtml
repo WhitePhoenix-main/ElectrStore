@@ -15,10 +15,17 @@
     var userId = user.Id;
     var order = await _context.OrderRecords.Where(u => u.UserId == userId && u.Status == 0)
         .FirstOrDefaultAsync();
+    List<OrderItemsRecord> orderItemsRecords = new List<OrderItemsRecord>();
+    if (order is not null)
+    {
+        orderItemsRecords = await _context.OrderItemsRecords
+            .Where(u => u.OrderId == order.Id)
+            .ToListAsync();
+    }
 }
 <h1>Корзина</h1>
 @{
-    if (order is not null)
+    if (order is not null && orderItemsRecords.Count != 0)
     {
         <table class="table">
             <thead>
