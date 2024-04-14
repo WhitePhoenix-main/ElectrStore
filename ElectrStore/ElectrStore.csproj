@@ -25,10 +25,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Pages\Basket\Data" />
-    </ItemGroup>
-
-    <ItemGroup>
       <_ContentIncludedByDefault Remove="wwwroot\lib\bootstrap\bootstrap-icons\bootstrap-icons.svg" />
       <_ContentIncludedByDefault Remove="wwwroot\lib\bootstrap\bootstrap-icons\font\bootstrap-icons.css" />
       <_ContentIncludedByDefault Remove="wwwroot\lib\bootstrap\bootstrap-icons\font\bootstrap-icons.json" />

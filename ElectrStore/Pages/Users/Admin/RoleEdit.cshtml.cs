@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ElectrStore;
 
-[Authorize(Roles = "Owner")]
+
 public class RoleEdit : PageModel
 {
     private RoleManager<IdentityRole> _roleManager { get; set; }

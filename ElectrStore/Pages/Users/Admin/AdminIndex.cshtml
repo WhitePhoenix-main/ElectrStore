@@ -1,0 +1,16 @@
+@page "~/admin"
+@model ElectrStore.AdminIndex
+
+@{
+    Layout = "Shared/_Layout";
+}
+
+@{
+    ViewData["Title"] = "Admin Dashboard";
+}
+
+<div class="container">
+    <h1>Welcome to Admin Dashboard</h1>
+    <p>Here you can manage orders, roles, and users.</p>
+    <a asp-page="/Users/Admin/RolesIndex">Список ролей</a>
+</div>

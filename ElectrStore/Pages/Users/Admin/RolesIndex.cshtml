@@ -1,6 +1,8 @@
 ﻿@page "/Admin/RolesIndex"
+@using Microsoft.EntityFrameworkCore
 @model ElectrStore.RolesIndex
 @inject RoleManager<IdentityRole> _roleManager
+@inject StoreContext _dbContext
 @{
     Layout = "_Layout";
 }
@@ -27,7 +29,23 @@
                     </form>
                 </td>
                 <td>
-                    Тут будут юзеры
+                    @{
+                        var records = await _dbContext.UserRoles
+                            .Where(r => r.RoleId == role.Id)
+                            .Select(r => r.UserId)
+                            .ToListAsync();
+                        foreach (var record in records)
+                        {
+                            var user = await _dbContext.Users
+                                .Where(u => u.Id == record)
+                                .FirstOrDefaultAsync();
+                            <p>@user.Email</p>
+                        }
+                    }
+                    @foreach (var user in Model.UserList)
+                    {
+
+                    }
                 </td>
             </tr>
         }

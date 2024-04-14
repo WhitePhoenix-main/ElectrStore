@@ -1,0 +1,38 @@
+@page "~/admin/Orders"
+@using Microsoft.EntityFrameworkCore
+@model ElectrStore.AdminOrderIndex
+@inject StoreContext _context
+@inject IProductsRepository _productsRepository
+
+
+<h1>Заказы</h1>
+@{
+    <table class="table">
+        <thead>
+        <tr>
+            <th>
+                Id
+            </th>
+            <th>
+                Id пользователя
+            </th>
+        </tr>
+        </thead>
+        <tbody>
+        @{
+            var orders = await _context.OrderRecords
+                .Where(o => o.Status != 0)
+                .ToListAsync();
+            foreach (var order in orders)
+            {
+                <tr>
+                    <td>
+                        <a asp-page="/Orders/AdminOrderDetail" asp-route-id="@order.Id">@order.Id</a>
+                    </td>
+                    <td>@order.UserId</td>
+                </tr>
+            }
+        }
+        </tbody>
+    </table>
+}
