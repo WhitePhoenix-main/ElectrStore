@@ -1,14 +1,8 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using ElectrStore;
 
-namespace ElectrStore.Pages.Buscket
+namespace ElectrStore
 {
     public class EditModel : PageModel
     {
@@ -21,7 +15,6 @@ namespace ElectrStore.Pages.Buscket
 
         [BindProperty]
         public OrderItemsRecord OrderItemsRecord { get; set; } = default!;
-
         public async Task<IActionResult> OnGetAsync(string id)
         {
             if (id == null || _context.OrderItemsRecords == null)
@@ -29,7 +22,8 @@ namespace ElectrStore.Pages.Buscket
                 return NotFound();
             }
 
-            var orderitemsrecord =  await _context.OrderItemsRecords.FirstOrDefaultAsync(m => m.Id == id);
+            var orderitemsrecord =  await _context.OrderItemsRecords
+                .FirstOrDefaultAsync(m => m.Id == id);
             if (orderitemsrecord == null)
             {
                 return NotFound();
@@ -42,29 +36,17 @@ namespace ElectrStore.Pages.Buscket
         // For more details, see https://aka.ms/RazorPagesCRUD.
         public async Task<IActionResult> OnPostAsync()
         {
+            var rec = new OrderItemsRecord();
             if (!ModelState.IsValid)
-            {
                 return Page();
-            }
-
-            _context.Attach(OrderItemsRecord).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!OrderItemsRecordExists(OrderItemsRecord.Id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
+            rec.BuyQuantity = OrderItemsRecord.BuyQuantity;
+            rec.ProductName = OrderItemsRecord.ProductName;
+            rec.Id = OrderItemsRecord.Id;
+            rec.OrderId = OrderItemsRecord.OrderId;
+            rec.Price = OrderItemsRecord.Price;
+            rec.ProductId = OrderItemsRecord.ProductId;
+            _context.Update(rec);
+            await _context.SaveChangesAsync();
             return RedirectToPage("./Index");
         }
 

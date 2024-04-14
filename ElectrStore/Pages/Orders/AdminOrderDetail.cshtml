@@ -1,82 +1,76 @@
 @page "~/admin/OrdersDetail/{id}"
 @model ElectrStore.AdminOrderDetail
-@inject UserManager<IdentityUser> _userManager
 @inject StoreContext _context
 @inject IProductsRepository _productsRepository
 
 <h1>Заказ</h1>
 @{
-        <table class="table">
-            <thead>
-            <tr>
-                <th>
-                    Название
-                </th>
-                <th>
-                    Изображение
-                </th>
-                <th>
-                    Категория
-                </th>
-                <th>
-                    Количество
-                </th>
-                <th>
-                    Сумма
-                </th>
-            </tr>
-            </thead>
-            <tbody>
-            @{
-                
-                foreach (var item in Model.OrderItems)
+    <table class="table">
+        <thead>
+        <tr>
+            <th>
+                Название
+            </th>
+            <th>
+                Изображение
+            </th>
+            <th>
+                Категория
+            </th>
+            <th>
+                Количество
+            </th>
+            <th>
+                Сумма
+            </th>
+        </tr>
+        </thead>
+        <tbody>
+        @{
+            foreach (var item in Model.OrderItems)
+            {
+                var product = _context.ProductRecords
+                    .Where(product => product.Id == item.ProductId)
+                    .ToList();
+                foreach (var elem in product)
                 {
-                    var product = _context.ProductRecords
-                        .Where(product => product.Id == item.ProductId)
-                        .ToList();
-                    foreach (var elem in product)
-                    {
-                        <tr>
-                            <td>
-                                <p>@elem.ProductName</p>
-                            </td>
-                            <td>
-                                <a class="vt-ratio-1x1">
-                                    <img src="@_productsRepository.GetPreviewPic(elem)" alt="">
-                                </a>
-                            </td>
-                            <td>
-                                <p>@elem.CategoryId</p>
-                            </td>
-                            <td>
-                                <p>@item.BuyQuantity</p>
-                            </td>
-                            <td>
-                                <p>@{
-                                       string text;
-                                       if (elem.IsDiscount)
-                                       {
-                                           var sum = item.Price * item.BuyQuantity;
-                                           text = _productsRepository.GetNormalizedProductPrice(Convert.ToDouble(sum));
-                                       }
-                                       else
-                                       {
-                                           var sum = item.Price * item.BuyQuantity;
-                                           text = _productsRepository.GetPriceWithDiscount(Convert.ToDouble(sum), elem.DiscountPercent);
-                                       }
-                                   } @text P</p>
-                            </td>
-                        </tr>
-                    }
+                    <tr>
+                        <td>
+                            <p>@elem.ProductName</p>
+                        </td>
+                        <td>
+                            <a class="vt-ratio-1x1">
+                                <img src="@_productsRepository.GetPreviewPic(elem)" alt="">
+                            </a>
+                        </td>
+                        <td>
+                            <p>@elem.CategoryId</p>
+                        </td>
+                        <td>
+                            <p>@item.BuyQuantity</p>
+                        </td>
+                        <td>
+                            <p>
+                                @{
+                                    string text;
+                                    if (elem.IsDiscount)
+                                    {
+                                        var sum = item.Price * item.BuyQuantity;
+                                        text = _productsRepository.GetNormalizedProductPrice(Convert.ToDouble(sum));
+                                    }
+                                    else
+                                    {
+                                        var sum = item.Price * item.BuyQuantity;
+                                        text = _productsRepository.GetPriceWithDiscount(Convert.ToDouble(sum), elem.DiscountPercent);
+                                    }
+                                }
+                                @text P
+                            </p>
+                        </td>
+                    </tr>
                 }
-
             }
-            </tbody>
-        </table>
-    }
-
-    else
-    {
-        <h2>Корзина пуста!</h2>
-    }
+        }
+        </tbody>
+    </table>
 }
